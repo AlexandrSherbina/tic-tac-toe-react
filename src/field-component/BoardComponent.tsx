@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import "./BoardComponent.css";
+import rangeArray from "../utils/array-fill";
 interface CellProps {
   id: number;
-  value: string;
+  value: string | number;
   onClick: () => void;
-  title: string;
+  title: string | number;
 }
 
 const Cell: React.FC<CellProps> = ({ id, value, onClick }) => {
+  console.log("value: ", value);
   return (
     <button
       className="btn-board-cell"
@@ -21,7 +23,8 @@ const Cell: React.FC<CellProps> = ({ id, value, onClick }) => {
 };
 
 const BoardComponent: React.FC = () => {
-  const [cells, setCells] = useState<string[]>(Array(9).fill(""));
+  // const [cells, setCells] = useState<string[]>(Array(9).fill(""));
+  const [cells, setCells] = useState<string[] | number[]>(rangeArray(0, 8));
 
   const handleClick = (index: number) => {
     // Логика игры, обновление массива cells
