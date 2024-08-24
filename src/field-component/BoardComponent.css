@@ -1,0 +1,21 @@
+.container-board {
+    display: grid;
+    grid-template-columns: repeat(3, 0fr);
+    grid-gap: 0.2rem;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.btn-board-cell {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    border: 1px solid #000;
+    background-color: #fff;
+    cursor: pointer;
+  
+    &:hover {
+        border:inherit;
+        background-color: #f0f0f0;
+    }
+}
