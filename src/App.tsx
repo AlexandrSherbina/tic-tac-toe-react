@@ -1,4 +1,4 @@
-import "./App.css";
+import "./styles.scss";
 import BoardComponent from "./field-component/BoardComponent";
 
 function App() {

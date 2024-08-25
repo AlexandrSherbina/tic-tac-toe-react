@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./BoardComponent.css";
+import "./BoardComponent.scss";
 import rangeArray from "../utils/array-fill";
 interface CellProps {
   id: number;
@@ -9,7 +9,6 @@ interface CellProps {
 }
 
 const Cell: React.FC<CellProps> = ({ id, value, onClick }) => {
-  console.log("value: ", value);
   return (
     <button
       className="btn-board-cell"
