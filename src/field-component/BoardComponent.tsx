@@ -160,7 +160,7 @@ const BoardComponent: React.FC = () => {
       setPopupOpen(true);
     }
 
-    if (win && counterClicks === GRID_BOARD * GRID_BOARD) {
+    if (win === null && counterClicks === GRID_BOARD * GRID_BOARD) {
       setWinner("Ничья!");
       setPopupOpen(true);
     }
