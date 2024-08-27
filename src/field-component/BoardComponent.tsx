@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./BoardComponent.scss";
-import rangeArray from "../utils/array-fill";
+
+const GRID_BOARD = 3;
 interface CellProps {
   id: number;
   value: string | number;
@@ -9,18 +10,87 @@ interface CellProps {
   clicked: boolean;
 }
 
-const winningCombination = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
+function createBoard(
+  size: number,
+  fillChar: string = "",
+  empty: boolean = true
+) {
+  const board = [];
+  for (let i = 0; i < size; i++) {
+    const row = [];
+    for (let j = 0; j < size; j++) {
+      if (empty) {
+        row.push(fillChar); // Случайное заполнение
+      } else {
+        row.push(Math.random() < 0.5 ? "X" : "O"); // Случайное заполнение
+      }
+    }
+    board.push(row);
+  }
+  return board;
+}
 
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
+const winCombinations = [
+  // Ряды
+  [
+    [0, 0],
+    [0, 1],
+    [0, 2],
+  ], // Верхний ряд
+  [
+    [1, 0],
+    [1, 1],
+    [1, 2],
+  ], // Средний ряд
+  [
+    [2, 0],
+    [2, 1],
+    [2, 2],
+  ], // Нижний ряд
 
-  [0, 4, 8],
-  [6, 4, 2],
+  // Столбцы
+  [
+    [0, 0],
+    [1, 0],
+    [2, 0],
+  ], // Левый столбец
+  [
+    [0, 1],
+    [1, 1],
+    [2, 1],
+  ], // Средний столбец
+  [
+    [0, 2],
+    [1, 2],
+    [2, 2],
+  ], // Правый столбец
+
+  // Диагонали
+  [
+    [0, 0],
+    [1, 1],
+    [2, 2],
+  ], // Главная диагональ
+  [
+    [0, 2],
+    [1, 1],
+    [2, 0],
+  ], // Побочная диагональ
 ];
+
+function checkWin(board: any[][]) {
+  for (const combination of winCombinations) {
+    const [a, b, c] = combination;
+    if (
+      board[a[0]][a[1]] === board[b[0]][b[1]] &&
+      board[b[0]][b[1]] === board[c[0]][c[1]] &&
+      board[a[0]][a[1]] !== ""
+    ) {
+      return board[a[0]][a[1]]; // Возвращаем выигрышный символ
+    }
+  }
+  return null; // Никто не выиграл
+}
 
 const Cell: React.FC<CellProps> = ({ id, value, onClick, clicked = false }) => {
   return (
@@ -39,16 +109,16 @@ const Cell: React.FC<CellProps> = ({ id, value, onClick, clicked = false }) => {
 interface StorageData {
   [key: number]: number[]; // any[] для гибкости, можно заменить на более конкретный тип
 }
+
 const BoardComponent: React.FC = () => {
+  const customBoard = createBoard(GRID_BOARD, "");
+  const [board, setBoard] = useState(customBoard);
   const [counterClicks, setCounterClicks] = useState<number>(0);
-  const [cells, setCells] = useState<number[]>(rangeArray(0, 8));
   const [currentPlayer, setCurrentPlayer] = useState<number>(0);
   const [storagePlayers, setStoragePlayers] = useState<StorageData>({});
   const [winner, setWinner] = useState<string>("");
 
-  const [closePopup, setClosePopup] = useState<boolean>(false);
-
-  // const handleClickPopup = () => {}
+  const [popupOpen, setPopupOpen] = useState<boolean>(false);
 
   const addValueToStorage = (key: number, value: number) => {
     setStoragePlayers((prevState) => ({
@@ -58,14 +128,25 @@ const BoardComponent: React.FC = () => {
   };
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    index: number
+    row: number,
+    col: number
   ) => {
     const button = event.currentTarget as HTMLButtonElement;
     if (button.dataset.clicked === "true") return;
     button.textContent = currentPlayer === 0 ? "X" : "O";
     button.dataset.clicked = "true";
     //
-    addValueToStorage(currentPlayer, index);
+    // addValueToStorage(currentPlayer, col);
+
+    if (board[row][col] !== "") {
+      return; // Ячейка уже занята
+    }
+
+    setBoard((prevBoard) => {
+      const newBoard = [...prevBoard];
+      newBoard[row][col] = currentPlayer === 1 ? "O" : "X";
+      return newBoard;
+    });
 
     //
     setCurrentPlayer(currentPlayer === 0 ? 1 : 0);
@@ -73,11 +154,15 @@ const BoardComponent: React.FC = () => {
   };
 
   useEffect(() => {
-    const length = cells.length;
-    console.log("storagePlayers: ", storagePlayers);
-    if (counterClicks === length) {
-      setClosePopup(true);
-      setWinner("Standoff");
+    const win = checkWin(board);
+    if (win) {
+      setWinner(`Winner ${win}`);
+      setPopupOpen(true);
+    }
+
+    if (win && counterClicks === GRID_BOARD * GRID_BOARD) {
+      setWinner("Ничья!");
+      setPopupOpen(true);
     }
   }, [storagePlayers, counterClicks]);
 
@@ -103,24 +188,31 @@ const BoardComponent: React.FC = () => {
     fontSize: "2rem",
   };
   return (
-    <div className="container-board">
-      {closePopup && (
+    <div
+      className="container-board"
+      style={{ gridTemplateColumns: `repeat(${GRID_BOARD}, 0fr)` }}
+    >
+      {popupOpen && (
         <span style={styles}>
           {winner}
-          <button onClick={() => setClosePopup(!closePopup)}>X</button>
+          <button onClick={() => setPopupOpen(!popupOpen)}>X</button>
         </span>
       )}
 
-      {cells.map((value, index) => (
-        <Cell
-          key={index}
-          id={index}
-          value={value}
-          title={value}
-          clicked={false}
-          onClick={(e) => handleClick(e, index)}
-        />
-      ))}
+      {board.map((row, i) =>
+        row.map((value, index) => {
+          return (
+            <Cell
+              key={i + index}
+              id={i + index}
+              value={value}
+              title={value}
+              clicked={false}
+              onClick={(e) => handleClick(e, i, index)}
+            />
+          );
+        })
+      )}
     </div>
   );
 };
