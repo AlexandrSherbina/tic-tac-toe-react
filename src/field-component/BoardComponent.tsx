@@ -43,7 +43,7 @@ const BoardComponent: React.FC = () => {
   useEffect(() => {
     const win = checkWin(board);
     if (win) {
-      setWinner(`Winner ${win}`);
+      setWinner(`Winner: ${win}`);
       setPopupOpen(true);
     }
 
@@ -54,26 +54,28 @@ const BoardComponent: React.FC = () => {
   }, [board]);
 
   return (
-    <div
-      className="container-board"
-      style={{ gridTemplateColumns: `repeat(${GRID_BOARD}, 0fr)` }}
-    >
-      {board.map((row, i) =>
-        row.map((value, index) => {
-          return (
-            <Cell
-              key={i + index}
-              id={i + index}
-              value={value}
-              title={value}
-              clicked={false}
-              onClick={(e) => handleClick(e, i, index)}
-            />
-          );
-        })
-      )}
+    <>
+      <div
+        className="container-board"
+        style={{ gridTemplateColumns: `repeat(${GRID_BOARD}, 0fr)` }}
+      >
+        {board.map((row, i) =>
+          row.map((value, index) => {
+            return (
+              <Cell
+                key={i + index}
+                id={i + index}
+                value={value}
+                title={value}
+                clicked={false}
+                onClick={(e) => handleClick(e, i, index)}
+              />
+            );
+          })
+        )}
+      </div>
       <Popup openPopup={popupOpen} content={winner} />
-    </div>
+    </>
   );
 };
 

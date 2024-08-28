@@ -4,7 +4,6 @@ import "./Popup.scss";
 interface PopupProps {
   content: string;
   openPopup: boolean;
-  setOpenPopup?: () => void;
 }
 
 const Popup: React.FC<PopupProps> = ({ openPopup, content }) => {
@@ -19,10 +18,12 @@ const Popup: React.FC<PopupProps> = ({ openPopup, content }) => {
     <>
       {open && (
         <div className="popup">
-          <button className="popup-btn-close" onClick={handleClose}>
-            X
-          </button>
-          {content}
+          <div className="popup-panel">
+            <button className="popup-btn-close" onClick={handleClose}>
+              x
+            </button>
+          </div>
+          <div className="popup-content">{content}</div>
         </div>
       )}
     </>
