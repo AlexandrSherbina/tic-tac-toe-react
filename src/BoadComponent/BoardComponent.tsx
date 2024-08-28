@@ -15,6 +15,10 @@ interface BoardProps {
   setCurrentPlayer: (value: number) => void;
 }
 
+interface ScoresData {
+  [key: string]: number;
+}
+
 const BoardComponent: React.FC<BoardProps> = ({
   restart,
   setRestart,
@@ -25,7 +29,19 @@ const BoardComponent: React.FC<BoardProps> = ({
   const [board, setBoard] = useState<string[][]>(customBoard);
   const [countSteps, setCountSteps] = useState<number>(0);
   const [winner, setWinner] = useState<string>("");
+  const [scores, setScores] = useState<ScoresData>({ X: 0, O: 0 });
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
+
+  //
+  const addValue = (key: string) => {
+    setScores((prevState) => {
+      return {
+        ...prevState,
+        [key]: prevState[key] + (key === "O" || key === "X" ? 1 : 0),
+      };
+    });
+  };
+  //
 
   const handleClick = (row: number, col: number) => {
     if (board[row][col] !== "") return;
@@ -44,6 +60,7 @@ const BoardComponent: React.FC<BoardProps> = ({
     const win = checkWin(board);
 
     if (win) {
+      addValue(win);
       setWinner(`Winner: ${win}`);
       setPopupOpen(true);
     }
@@ -52,7 +69,8 @@ const BoardComponent: React.FC<BoardProps> = ({
       setWinner("Standoff!");
       setPopupOpen(true);
     }
-  }, [board]);
+    console.log("scores", scores);
+  }, [board, setScores]);
 
   useEffect(() => {
     if (restart) {
