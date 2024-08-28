@@ -4,19 +4,26 @@ import { createBoard } from "../utils/helpers/createBoard";
 import { checkWin } from "../utils/helpers/checkWin";
 import Popup from "../Popup/Popup";
 import "./BoardComponent.scss";
+import playerSign from "../utils/helpers/playerSign";
 
 const SIZE_GRID = 3;
 
 interface BoardProps {
   restart: boolean;
   setRestart: (value: boolean) => void;
+  currentPlayer: number;
+  setCurrentPlayer: (value: number) => void;
 }
 
-const BoardComponent: React.FC<BoardProps> = ({ restart, setRestart }) => {
+const BoardComponent: React.FC<BoardProps> = ({
+  restart,
+  setRestart,
+  currentPlayer,
+  setCurrentPlayer,
+}) => {
   const customBoard = createBoard(SIZE_GRID, "");
   const [board, setBoard] = useState<string[][]>(customBoard);
   const [countSteps, setCountSteps] = useState<number>(0);
-  const [currentPlayer, setCurrentPlayer] = useState<number>(0);
   const [winner, setWinner] = useState<string>("");
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
 
@@ -25,7 +32,7 @@ const BoardComponent: React.FC<BoardProps> = ({ restart, setRestart }) => {
 
     setBoard((prevBoard) => {
       const newBoard = [...prevBoard];
-      newBoard[row][col] = currentPlayer === 0 ? "X" : "O";
+      newBoard[row][col] = playerSign(currentPlayer);
       return newBoard;
     });
 

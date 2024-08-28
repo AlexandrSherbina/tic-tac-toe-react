@@ -1,5 +1,10 @@
+@import '../styles/global.scss';
 .container-panel-game {
 }
 
 .container-step-players {
+    perspective: 500px;
+    &>span {       
+       @include scores;
+    }
 }

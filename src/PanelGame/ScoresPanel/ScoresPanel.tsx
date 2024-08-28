@@ -1,6 +1,7 @@
 import React from "react";
 import "./ScoresPanel.scss";
-const ScoresPanel: React.FC = () => {
+interface ScoresPanelProps {}
+const ScoresPanel: React.FC<ScoresPanelProps> = ({}) => {
   return (
     <div className="container-scores-game">
       <div className="player-game">

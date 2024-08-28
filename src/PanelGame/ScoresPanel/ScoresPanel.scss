@@ -1,6 +1,8 @@
+@import '../../styles/global.scss';
 .container-scores-game {
 }
 .player-game {
 }
 .scores-player {
+    @include scores;
 }
