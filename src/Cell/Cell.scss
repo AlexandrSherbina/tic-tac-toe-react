@@ -1,0 +1,16 @@
+@import '../styles/global.scss';
+
+.btn-board-cell {
+    @include flexboxCenter;
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+    border: 1px solid #000;
+    background-color: $accent-color;
+    cursor: pointer;
+  
+    &:hover {
+        border:inherit;
+        background-color: #f0f0f0;
+    }
+}

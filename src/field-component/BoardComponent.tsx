@@ -1,131 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { Cell } from "../Cell/Cell";
+import { createBoard } from "../utils/helpers/createBoard";
+import { checkWin } from "../utils/helpers/checkWin";
 import "./BoardComponent.scss";
 
 const GRID_BOARD = 3;
-interface CellProps {
-  id: number;
-  value: string | number;
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  title: string | number;
-  clicked: boolean;
-}
-
-function createBoard(
-  size: number,
-  fillChar: string = "",
-  empty: boolean = true
-) {
-  const board = [];
-  for (let i = 0; i < size; i++) {
-    const row = [];
-    for (let j = 0; j < size; j++) {
-      if (empty) {
-        row.push(fillChar); // Случайное заполнение
-      } else {
-        row.push(Math.random() < 0.5 ? "X" : "O"); // Случайное заполнение
-      }
-    }
-    board.push(row);
-  }
-  return board;
-}
-
-const winCombinations = [
-  // Ряды
-  [
-    [0, 0],
-    [0, 1],
-    [0, 2],
-  ], // Верхний ряд
-  [
-    [1, 0],
-    [1, 1],
-    [1, 2],
-  ], // Средний ряд
-  [
-    [2, 0],
-    [2, 1],
-    [2, 2],
-  ], // Нижний ряд
-
-  // Столбцы
-  [
-    [0, 0],
-    [1, 0],
-    [2, 0],
-  ], // Левый столбец
-  [
-    [0, 1],
-    [1, 1],
-    [2, 1],
-  ], // Средний столбец
-  [
-    [0, 2],
-    [1, 2],
-    [2, 2],
-  ], // Правый столбец
-
-  // Диагонали
-  [
-    [0, 0],
-    [1, 1],
-    [2, 2],
-  ], // Главная диагональ
-  [
-    [0, 2],
-    [1, 1],
-    [2, 0],
-  ], // Побочная диагональ
-];
-
-function checkWin(board: any[][]) {
-  for (const combination of winCombinations) {
-    const [a, b, c] = combination;
-    if (
-      board[a[0]][a[1]] === board[b[0]][b[1]] &&
-      board[b[0]][b[1]] === board[c[0]][c[1]] &&
-      board[a[0]][a[1]] !== ""
-    ) {
-      return board[a[0]][a[1]]; // Возвращаем выигрышный символ
-    }
-  }
-  return null; // Никто не выиграл
-}
-
-const Cell: React.FC<CellProps> = ({ id, value, onClick, clicked = false }) => {
-  return (
-    <button
-      className="btn-board-cell"
-      id={`cell-${id}`}
-      onClick={onClick}
-      title={`title-${value}`}
-      data-clicked={clicked}
-    >
-      {value}
-    </button>
-  );
-};
-
-interface StorageData {
-  [key: number]: number[]; // any[] для гибкости, можно заменить на более конкретный тип
-}
 
 const BoardComponent: React.FC = () => {
   const customBoard = createBoard(GRID_BOARD, "");
   const [board, setBoard] = useState(customBoard);
   const [counterClicks, setCounterClicks] = useState<number>(0);
   const [currentPlayer, setCurrentPlayer] = useState<number>(0);
-  const [storagePlayers, setStoragePlayers] = useState<StorageData>({});
   const [winner, setWinner] = useState<string>("");
 
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
 
-  const addValueToStorage = (key: number, value: number) => {
-    setStoragePlayers((prevState) => ({
-      ...prevState,
-      [key]: [...(prevState[key] || []), value],
-    }));
-  };
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     row: number,
@@ -133,10 +22,8 @@ const BoardComponent: React.FC = () => {
   ) => {
     const button = event.currentTarget as HTMLButtonElement;
     if (button.dataset.clicked === "true") return;
-    button.textContent = currentPlayer === 0 ? "X" : "O";
     button.dataset.clicked = "true";
     //
-    // addValueToStorage(currentPlayer, col);
 
     if (board[row][col] !== "") {
       return; // Ячейка уже занята
@@ -144,7 +31,7 @@ const BoardComponent: React.FC = () => {
 
     setBoard((prevBoard) => {
       const newBoard = [...prevBoard];
-      newBoard[row][col] = currentPlayer === 1 ? "O" : "X";
+      newBoard[row][col] = currentPlayer === 0 ? "X" : "O";
       return newBoard;
     });
 
@@ -164,7 +51,7 @@ const BoardComponent: React.FC = () => {
       setWinner("Ничья!");
       setPopupOpen(true);
     }
-  }, [storagePlayers, counterClicks]);
+  }, [board]);
 
   interface MyStyles {
     position: "static" | "relative" | "absolute" | "fixed" | "sticky";

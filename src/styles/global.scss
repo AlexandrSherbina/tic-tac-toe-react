@@ -1,2 +1,8 @@
 $primary-color: #333;
 $accent-color: #f00;
+
+@mixin flexboxCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
