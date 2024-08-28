@@ -34,10 +34,9 @@ const BoardComponent: React.FC<BoardProps> = ({ restart, setRestart }) => {
   };
 
   useEffect(() => {
-    let win = checkWin(board);
+    const win = checkWin(board);
 
     if (win) {
-      console.log("win inner", win);
       setWinner(`Winner: ${win}`);
       setPopupOpen(true);
     }
@@ -46,6 +45,7 @@ const BoardComponent: React.FC<BoardProps> = ({ restart, setRestart }) => {
       setWinner("Standoff!");
       setPopupOpen(true);
     }
+    console.log("board", board);
   }, [board]);
 
   useEffect(() => {
