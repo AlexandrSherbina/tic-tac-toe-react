@@ -1,5 +1,5 @@
 import "./styles.scss";
-import BoardComponent from "./field-component/BoardComponent";
+import BoardComponent from "./BoadComponent/BoardComponent";
 
 function App() {
   return (
