@@ -1,13 +1,12 @@
 import React from "react";
 import "./PanelGame.scss";
+import ButtonPanel from "./ButtonPanel/ButtonPanel";
 interface PanelGameProps {
   restart: boolean;
   setRestart: (value: boolean) => void;
 }
 
 const PanelGame: React.FC<PanelGameProps> = ({ setRestart }) => {
-  const handleRestart = () => setRestart(true);
-
   return (
     <>
       <div className="container-panel-game">
@@ -22,12 +21,7 @@ const PanelGame: React.FC<PanelGameProps> = ({ setRestart }) => {
             <span className="scores-player">0</span>
           </div>
         </div>
-        <div className="button-container-game">
-          <button className="btn-game btn-start-game">START GAME</button>
-          <button onClick={handleRestart} className="btn-game btn-restart-game">
-            RESTART GAME
-          </button>
-        </div>
+        <ButtonPanel setRestart={setRestart}></ButtonPanel>
         <div className="container-step-players">Step player 1</div>
       </div>
     </>

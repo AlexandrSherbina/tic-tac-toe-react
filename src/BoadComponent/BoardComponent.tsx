@@ -45,7 +45,6 @@ const BoardComponent: React.FC<BoardProps> = ({ restart, setRestart }) => {
       setWinner("Standoff!");
       setPopupOpen(true);
     }
-    console.log("board", board);
   }, [board]);
 
   useEffect(() => {

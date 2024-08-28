@@ -1,0 +1,14 @@
+.button-container-game {
+}
+.btn-game {
+}
+
+.btn-restart-game {
+    &:active {
+        background-color: darkgray;
+        box-shadow: inset 0px 5px 10px rgba(0, 0, 0, 0.2);
+        transform: translateY(2px);
+        transition: all 0.2s ease-in-out;
+      }
+}
+
