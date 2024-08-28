@@ -9,7 +9,7 @@ interface PopupProps {
 const Popup: React.FC<PopupProps> = ({ openPopup, content }) => {
   const [open, setOpen] = useState<boolean>(openPopup);
 
-  const handleClose = () => setOpen(!open);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     setOpen(openPopup);

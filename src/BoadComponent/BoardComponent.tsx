@@ -7,7 +7,12 @@ import "./BoardComponent.scss";
 
 const SIZE_GRID = 3;
 
-const BoardComponent: React.FC = () => {
+interface BoardProps {
+  restart: boolean;
+  setRestart: (value: boolean) => void;
+}
+
+const BoardComponent: React.FC<BoardProps> = ({ restart, setRestart }) => {
   const customBoard = createBoard(SIZE_GRID, "");
   const [board, setBoard] = useState<string[][]>(customBoard);
   const [countSteps, setCountSteps] = useState<number>(0);
@@ -29,8 +34,10 @@ const BoardComponent: React.FC = () => {
   };
 
   useEffect(() => {
-    const win = checkWin(board);
+    let win = checkWin(board);
+
     if (win) {
+      console.log("win inner", win);
       setWinner(`Winner: ${win}`);
       setPopupOpen(true);
     }
@@ -40,6 +47,15 @@ const BoardComponent: React.FC = () => {
       setPopupOpen(true);
     }
   }, [board]);
+
+  useEffect(() => {
+    if (restart) {
+      setBoard(customBoard);
+      setRestart(false);
+      setCountSteps(0);
+      setPopupOpen(false);
+    }
+  }, [restart]);
 
   return (
     <>
