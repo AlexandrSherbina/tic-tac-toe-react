@@ -8,18 +8,22 @@ import playerSign from "../utils/helpers/playerSign";
 
 const SIZE_GRID = 3;
 
+interface Scores {
+  X: string | number;
+  O: string | number;
+}
 interface BoardProps {
+  scores: Scores;
+  setScores: (value: any) => void;
   restart: boolean;
   setRestart: (value: boolean) => void;
   currentPlayer: number;
   setCurrentPlayer: (value: number) => void;
 }
 
-interface ScoresData {
-  [key: string]: number;
-}
-
 const BoardComponent: React.FC<BoardProps> = ({
+  scores,
+  setScores,
   restart,
   setRestart,
   currentPlayer,
@@ -29,17 +33,14 @@ const BoardComponent: React.FC<BoardProps> = ({
   const [board, setBoard] = useState<string[][]>(customBoard);
   const [countSteps, setCountSteps] = useState<number>(0);
   const [winner, setWinner] = useState<string>("");
-  const [scores, setScores] = useState<ScoresData>({ X: 0, O: 0 });
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
 
   //
-  const addValue = (key: string) => {
-    setScores((prevState) => {
-      return {
-        ...prevState,
-        [key]: prevState[key] + (key === "O" || key === "X" ? 1 : 0),
-      };
-    });
+  const addScore = (key: string) => {
+    setScores((prevState: { [key: string]: string & number }) => ({
+      ...prevState,
+      [key]: prevState[key] + (key === "O" || key === "X" ? 1 : 0),
+    }));
   };
   //
 
@@ -60,7 +61,7 @@ const BoardComponent: React.FC<BoardProps> = ({
     const win = checkWin(board);
 
     if (win) {
-      addValue(win);
+      addScore(win);
       setWinner(`Winner: ${win}`);
       setPopupOpen(true);
     }

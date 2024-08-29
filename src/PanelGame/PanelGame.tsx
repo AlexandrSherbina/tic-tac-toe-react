@@ -4,17 +4,22 @@ import ButtonPanel from "./ButtonPanel/ButtonPanel";
 import ScoresPanel from "./ScoresPanel/ScoresPanel";
 import playerSign from "../utils/helpers/playerSign";
 interface PanelGameProps {
+  scores: { X: number; O: number };
   currentPlayer: number;
   restart: boolean;
   setRestart: (value: boolean) => void;
 }
 
-const PanelGame: React.FC<PanelGameProps> = ({ currentPlayer, setRestart }) => {
+const PanelGame: React.FC<PanelGameProps> = ({
+  scores,
+  currentPlayer,
+  setRestart,
+}) => {
   return (
     <>
       <div className="container-panel-game">
         <h1>Panel GAME</h1>
-        <ScoresPanel></ScoresPanel>
+        <ScoresPanel scores={scores}></ScoresPanel>
         <ButtonPanel setRestart={setRestart}></ButtonPanel>
         <div className="container-step-players">
           Step player: <span>{playerSign(currentPlayer)}</span>
