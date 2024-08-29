@@ -8,12 +8,7 @@ import playerSign from "../utils/helpers/playerSign";
 
 const SIZE_GRID = 3;
 
-interface Scores {
-  X: string | number;
-  O: string | number;
-}
 interface BoardProps {
-  scores: Scores;
   setScores: (value: any) => void;
   restart: boolean;
   setRestart: (value: boolean) => void;
@@ -22,7 +17,6 @@ interface BoardProps {
 }
 
 const BoardComponent: React.FC<BoardProps> = ({
-  scores,
   setScores,
   restart,
   setRestart,
@@ -32,17 +26,17 @@ const BoardComponent: React.FC<BoardProps> = ({
   const customBoard = createBoard(SIZE_GRID, "");
   const [board, setBoard] = useState<string[][]>(customBoard);
   const [countSteps, setCountSteps] = useState<number>(0);
-  const [winner, setWinner] = useState<string>("");
+  const [messageWinner, setMessageWinner] = useState<string>("");
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
+  const [blockingWinnerVerification, setBlockingWinnerVerification] =
+    useState<boolean>(false);
 
-  //
-  const addScore = (key: string) => {
+  const addScores = (key: string) => {
     setScores((prevState: { [key: string]: string & number }) => ({
       ...prevState,
       [key]: prevState[key] + (key === "O" || key === "X" ? 1 : 0),
     }));
   };
-  //
 
   const handleClick = (row: number, col: number) => {
     if (board[row][col] !== "") return;
@@ -59,22 +53,22 @@ const BoardComponent: React.FC<BoardProps> = ({
 
   useEffect(() => {
     const win = checkWin(board);
-
-    if (win) {
-      addScore(win);
-      setWinner(`Winner: ${win}`);
+    if (!blockingWinnerVerification && win) {
+      addScores(win);
+      setMessageWinner(`Winner: ${win}`);
       setPopupOpen(true);
+      setBlockingWinnerVerification(true);
     }
 
     if (!win && countSteps === SIZE_GRID * SIZE_GRID) {
-      setWinner("Standoff!");
+      setMessageWinner("Standoff!");
       setPopupOpen(true);
     }
-    console.log("scores", scores);
-  }, [board, setScores]);
+  }, [board]);
 
   useEffect(() => {
     if (restart) {
+      setBlockingWinnerVerification(false);
       setBoard(customBoard);
       setRestart(false);
       setCountSteps(0);
@@ -102,7 +96,7 @@ const BoardComponent: React.FC<BoardProps> = ({
           })
         )}
       </div>
-      <Popup openPopup={popupOpen} content={winner} />
+      <Popup openPopup={popupOpen} content={messageWinner} />
     </>
   );
 };
