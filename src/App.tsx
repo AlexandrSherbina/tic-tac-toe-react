@@ -1,5 +1,5 @@
 import "./styles.scss";
-import BoardComponent from "./BoadComponent/BoardComponent";
+import BoardComponent from "./BoardComponent/BoardComponent";
 import PanelGame from "./PanelGame/PanelGame";
 import { useState } from "react";
 
