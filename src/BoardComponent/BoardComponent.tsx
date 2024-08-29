@@ -7,6 +7,7 @@ import "./BoardComponent.scss";
 import playerSign from "../utils/helpers/playerSign";
 
 const SIZE_GRID = 3;
+const CLASS_WINNER = "winner";
 
 interface BoardProps {
   setScores: (value: any) => void;
@@ -14,6 +15,10 @@ interface BoardProps {
   setRestart: (value: boolean) => void;
   currentPlayer: number;
   setCurrentPlayer: (value: number) => void;
+}
+
+interface StepsType {
+  [key: string]: any[];
 }
 
 const BoardComponent: React.FC<BoardProps> = ({
@@ -30,6 +35,31 @@ const BoardComponent: React.FC<BoardProps> = ({
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
   const [blockingWinnerVerification, setBlockingWinnerVerification] =
     useState<boolean>(false);
+  const [playerSteps, setPlayerSteps] = useState<StepsType>({ X: [], O: [] });
+
+  const addPlayerSteps = (key: string, value: number | string) => {
+    setPlayerSteps((prevState) => ({
+      ...prevState,
+      [key]: [...(prevState[key] || []), value],
+    }));
+  };
+
+  const addClassWinnerCell = (arr: string[]) => {
+    const lastThreeElem = arr.slice(-3);
+    lastThreeElem.forEach((key) => {
+      const cell = document.querySelector(`#${key}`);
+      cell?.classList.add(CLASS_WINNER);
+    });
+  };
+
+  const removeWinnerClass = () => {
+    const elementsWithWinnerClass = document.querySelectorAll(
+      `.${CLASS_WINNER}`
+    );
+    elementsWithWinnerClass.forEach((element) => {
+      element.classList.remove(CLASS_WINNER);
+    });
+  };
 
   const addScores = (key: string) => {
     setScores((prevState: { [key: string]: string & number }) => ({
@@ -40,7 +70,6 @@ const BoardComponent: React.FC<BoardProps> = ({
 
   const handleClick = (row: number, col: number) => {
     if (board[row][col] !== "") return;
-
     setBoard((prevBoard) => {
       const newBoard = [...prevBoard];
       newBoard[row][col] = playerSign(currentPlayer);
@@ -49,6 +78,8 @@ const BoardComponent: React.FC<BoardProps> = ({
 
     setCurrentPlayer(currentPlayer === 0 ? 1 : 0);
     setCountSteps((prevCount) => ++prevCount);
+    // addPlayerSteps(playerSign(currentPlayer), countSteps);
+    addPlayerSteps(playerSign(currentPlayer), `cell-${row}-${col}`);
   };
 
   useEffect(() => {
@@ -57,6 +88,7 @@ const BoardComponent: React.FC<BoardProps> = ({
       addScores(win);
       setMessageWinner(`Winner: ${win}`);
       setPopupOpen(true);
+      addClassWinnerCell(playerSteps[win]);
       setBlockingWinnerVerification(true);
     }
 
@@ -68,6 +100,7 @@ const BoardComponent: React.FC<BoardProps> = ({
 
   useEffect(() => {
     if (restart) {
+      removeWinnerClass();
       setBlockingWinnerVerification(false);
       setBoard(customBoard);
       setRestart(false);
