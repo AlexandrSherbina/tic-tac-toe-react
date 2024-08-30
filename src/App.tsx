@@ -2,6 +2,7 @@ import "./styles.scss";
 import BoardComponent from "./BoardComponent/BoardComponent";
 import PanelGame from "./PanelGame/PanelGame";
 import { useState } from "react";
+import BackgroundApp from "./BackgroundApp/BackgroundApp";
 
 type ScoresTypes = {
   X: number;
@@ -15,9 +16,7 @@ function App() {
   return (
     <>
       <div className="container-game">
-        <div className="container-fon-image">
-          <div className="glass"></div>
-        </div>
+        <BackgroundApp></BackgroundApp>
         <PanelGame
           scores={scores}
           currentPlayer={currentPlayer}
