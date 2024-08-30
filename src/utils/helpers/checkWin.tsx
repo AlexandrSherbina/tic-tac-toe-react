@@ -8,8 +8,11 @@ export function checkWin(board: any[][]) {
       board[b[0]][b[1]] === board[c[0]][c[1]] &&
       board[a[0]][a[1]] !== ""
     ) {
-      return board[a[0]][a[1]]; // Возвращаем выигрышный символ
+      return {
+        winningPlayer: board[a[0]][a[1]],
+        winningCombination: combination,
+      }; // Возвращаем выигрышный символ
     }
   }
-  return null; // Никто не выиграл
+  return { winningPlayer: null, winningCombination: [] }; // Никто не выиграл
 }

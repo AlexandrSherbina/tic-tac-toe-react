@@ -30,25 +30,25 @@ const BoardComponent: React.FC<BoardProps> = ({
 }) => {
   const customBoard = createBoard(SIZE_GRID, "");
   const [board, setBoard] = useState<string[][]>(customBoard);
-  const [countSteps, setCountSteps] = useState<number>(0);
+  const [strokeCounter, setStrokeCounter] = useState<number>(0);
   const [messageWinner, setMessageWinner] = useState<string>("");
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
   const [blockingWinnerVerification, setBlockingWinnerVerification] =
     useState<boolean>(false);
-  const [playerSteps, setPlayerSteps] = useState<StepsType>({ X: [], O: [] });
+  const [playerMoves, setPlayerMoves] = useState<StepsType>({ X: [], O: [] });
 
-  const addPlayerSteps = (key: string, value: number | string) => {
-    setPlayerSteps((prevState) => ({
+  const addPlayerMove = (key: string, value: number | string) => {
+    setPlayerMoves((prevState) => ({
       ...prevState,
       [key]: [...(prevState[key] || []), value],
     }));
   };
 
-  const addClassWinnerCell = (arr: string[]) => {
-    const lastThreeElem = arr.slice(-3);
-    lastThreeElem.forEach((key) => {
-      const cell = document.querySelector(`#${key}`);
-      cell?.classList.add(CLASS_WINNER);
+  const addClassToWinnerCell = (arrWinningComb: number[][]) => {
+    arrWinningComb.forEach((row) => {
+      const [i, j] = row;
+      const playFieldCell = document.querySelector(`#cell-${i}-${j}`);
+      playFieldCell?.classList.add(CLASS_WINNER);
     });
   };
 
@@ -77,22 +77,22 @@ const BoardComponent: React.FC<BoardProps> = ({
     });
 
     setCurrentPlayer(currentPlayer === 0 ? 1 : 0);
-    setCountSteps((prevCount) => ++prevCount);
-    // addPlayerSteps(playerSign(currentPlayer), countSteps);
-    addPlayerSteps(playerSign(currentPlayer), `cell-${row}-${col}`);
+    setStrokeCounter((prevCount) => ++prevCount);
+    addPlayerMove(playerSign(currentPlayer), `cell-${row}-${col}`);
   };
 
   useEffect(() => {
-    const win = checkWin(board);
-    if (!blockingWinnerVerification && win) {
-      addScores(win);
-      setMessageWinner(`Winner: ${win}`);
+    const { winningPlayer, winningCombination } = checkWin(board);
+
+    if (!blockingWinnerVerification && winningPlayer) {
+      addScores(winningPlayer);
+      setMessageWinner(`Winner: ${winningPlayer}`);
       setPopupOpen(true);
-      addClassWinnerCell(playerSteps[win]);
+      addClassToWinnerCell(winningCombination);
       setBlockingWinnerVerification(true);
     }
 
-    if (!win && countSteps === SIZE_GRID * SIZE_GRID) {
+    if (!winningPlayer && strokeCounter === SIZE_GRID * SIZE_GRID) {
       setMessageWinner("Standoff!");
       setPopupOpen(true);
     }
@@ -104,7 +104,7 @@ const BoardComponent: React.FC<BoardProps> = ({
       setBlockingWinnerVerification(false);
       setBoard(customBoard);
       setRestart(false);
-      setCountSteps(0);
+      setStrokeCounter(0);
       setPopupOpen(false);
     }
   }, [restart]);
