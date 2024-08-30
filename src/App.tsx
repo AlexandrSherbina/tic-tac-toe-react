@@ -15,6 +15,9 @@ function App() {
   return (
     <>
       <div className="container-game">
+        <div className="container-fon-image">
+          <div className="glass"></div>
+        </div>
         <PanelGame
           scores={scores}
           currentPlayer={currentPlayer}
