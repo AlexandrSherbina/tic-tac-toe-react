@@ -18,7 +18,7 @@ const PanelGame: React.FC<PanelGameProps> = ({
   return (
     <>
       <div className="container-panel-game">
-        <h1>Panel GAME</h1>
+        <h1>Tic-Toc-Toe GAME</h1>
         <ScoresPanel scores={scores}></ScoresPanel>
         <ButtonPanel setRestart={setRestart}></ButtonPanel>
         <div className="container-step-players">
