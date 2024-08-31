@@ -16,7 +16,7 @@ function App() {
   return (
     <>
       <div className="container-game">
-        <BackgroundApp></BackgroundApp>
+        <BackgroundApp restart={restart}></BackgroundApp>
         <PanelGame
           scores={scores}
           currentPlayer={currentPlayer}
