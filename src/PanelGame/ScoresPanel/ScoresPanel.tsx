@@ -5,9 +5,6 @@ interface ScoresPanelProps {
   scores: { X: number; O: number };
 }
 
-
-
-
 const ScoresPanel: React.FC<ScoresPanelProps> = ({ scores }) => {
   return (
     <div className="container-scores-game">
