@@ -16,13 +16,13 @@
 }
 
 .popup-btn-close {
-    @include flexboxCenter;
-    $pos-btn: -3rem; 
+    $pos-btn: -3.2rem; 
     position: absolute;
     top: $pos-btn;
     right: $pos-btn + 1;
     margin: 0rem;
     padding: 0rem;
+    background: transparent;
     color: darkred;
 }
 
