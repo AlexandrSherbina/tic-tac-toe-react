@@ -13,6 +13,8 @@ interface BoardProps {
   setScores: (value: any) => void;
   restart: boolean;
   setRestart: (value: boolean) => void;
+  reset: boolean;
+  setReset: (value: boolean) => void;
   currentPlayer: number;
   setCurrentPlayer: (value: number) => void;
 }
@@ -27,6 +29,8 @@ const BoardComponent: React.FC<BoardProps> = ({
   setRestart,
   currentPlayer,
   setCurrentPlayer,
+  reset,
+  setReset,
 }) => {
   const customBoard = createBoard(SIZE_GRID, "");
   const [board, setBoard] = useState<string[][]>(customBoard);
@@ -108,6 +112,17 @@ const BoardComponent: React.FC<BoardProps> = ({
       setPopupOpen(false);
     }
   }, [restart]);
+
+  useEffect(() => {
+    if (reset) {
+      setBlockingWinnerVerification(false);
+      setScores({ X: 0, O: 0 });
+      removeWinnerClass();
+      setStrokeCounter(0);
+      setBoard(customBoard);
+      setReset(false);
+    }
+  }, [reset]);
 
   return (
     <>

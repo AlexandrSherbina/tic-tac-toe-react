@@ -1,8 +1,10 @@
 .button-container-game {
+  
 }
 .btn-game {
 }
 
+.btn-reset-game ,
 .btn-restart-game {
     &:active {
         background-color: darkgray;
@@ -10,5 +12,5 @@
         transform: translateY(2px);
         transition: all 0.2s ease-in-out;
       }
-}
+    }
 

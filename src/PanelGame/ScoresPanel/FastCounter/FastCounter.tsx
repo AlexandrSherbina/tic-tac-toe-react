@@ -28,7 +28,6 @@ const FastCounter: React.FC<FastCounterProps> = ({
 
   useEffect(() => {
     let count = score >= 1 ? (score - 1) * rank : 0;
-
     const animate = () => {
       if (count === scoreWithRank) {
         if (intervalRef.current !== null) {
@@ -42,6 +41,10 @@ const FastCounter: React.FC<FastCounterProps> = ({
     };
 
     animate();
+
+    if (count === 0 && counterScores > 0) {
+      setCounterScores(count);
+    }
 
     return () => {
       if (intervalRef.current !== null) {

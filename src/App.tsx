@@ -13,6 +13,7 @@ function App() {
   const [currentPlayer, setCurrentPlayer] = useState<number>(0);
   const [scores, setScores] = useState<ScoresTypes>({ X: 0, O: 0 });
   const [restart, setRestart] = useState(false);
+  const [reset, setReset] = useState(false);
   return (
     <>
       <div className="container-game">
@@ -22,6 +23,7 @@ function App() {
           currentPlayer={currentPlayer}
           restart={restart}
           setRestart={setRestart}
+          setReset={setReset}
         ></PanelGame>
         <BoardComponent
           setScores={setScores}
@@ -29,6 +31,8 @@ function App() {
           setCurrentPlayer={setCurrentPlayer}
           restart={restart}
           setRestart={setRestart}
+          setReset={setReset}
+          reset={reset}
         ></BoardComponent>
       </div>
     </>
