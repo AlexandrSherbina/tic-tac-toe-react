@@ -40,6 +40,7 @@ const BoardComponent: React.FC<BoardProps> = ({
   const [blockingWinnerVerification, setBlockingWinnerVerification] =
     useState<boolean>(false);
   const [playerMoves, setPlayerMoves] = useState<StepsType>({ X: [], O: [] });
+  const [winner, setWinner] = useState<string>("");
 
   const addPlayerMove = (key: string, value: number | string) => {
     setPlayerMoves((prevState) => ({
@@ -89,6 +90,7 @@ const BoardComponent: React.FC<BoardProps> = ({
     const { winningPlayer, winningCombination } = checkWin(board);
 
     if (!blockingWinnerVerification && winningPlayer) {
+      setWinner(winningPlayer);
       addScores(winningPlayer);
       setMessageWinner(`Winner: ${winningPlayer}`);
       setPopupOpen(true);
@@ -100,10 +102,11 @@ const BoardComponent: React.FC<BoardProps> = ({
       setMessageWinner("Standoff!");
       setPopupOpen(true);
     }
-  }, [board]);
+  }, [board, setWinner]);
 
   useEffect(() => {
     if (restart) {
+      setCurrentPlayer(winner === "O" ? 1 : 0);
       removeWinnerClass();
       setBlockingWinnerVerification(false);
       setBoard(customBoard);
