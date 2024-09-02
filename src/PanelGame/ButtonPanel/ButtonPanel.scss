@@ -1,7 +1,12 @@
+
 .button-container-game {
-  
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 1rem;
 }
 .btn-game {
+  margin: 1rem 0rem;
 }
 
 .btn-reset-game ,
