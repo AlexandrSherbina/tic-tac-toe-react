@@ -5,6 +5,7 @@ import { checkWin } from "../utils/helpers/checkWin";
 import Popup from "../Popup/Popup";
 import "./BoardComponent.scss";
 import playerSign from "../utils/helpers/playerSign";
+import { getRandomIntInclusive } from "../utils/getRandomIntInclusive";
 
 const SIZE_GRID = 3;
 const CLASS_WINNER = "winner";
@@ -21,12 +22,6 @@ interface BoardProps {
 
 interface StepsType {
   [key: string]: any[];
-}
-
-function getRandomIntInclusive(min: number, max: number) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min); // Максимум и минимум включаются
 }
 
 const BoardComponent: React.FC<BoardProps> = ({
@@ -106,18 +101,21 @@ const BoardComponent: React.FC<BoardProps> = ({
     setCurrentPlayer(currentPlayer === 0 ? 1 : 0);
     setStrokeCounter((prevCount) => ++prevCount);
     addPlayerMove(playerSign(currentPlayer), `cell-${row}-${col}`);
-    // console.log("board", board);
+    console.log("board LOGIC", board);
     const empty = filterEmptyCells(board);
-    // console.log("emptyLogic: ", empty);
-    setEmptyCells(empty);
+    // setEmptyCells(empty);
   }
 
   const AIplayer = () => {
     // AI player
     console.log("AI player: X => move");
-    // const empty = filterEmptyCells(board);
-    console.log("AI empty", emptyCells);
+    // console.log("AI empty", emptyCells);
+    console.log("board", board);
+    const emptyCells = filterEmptyCells(board);
+    console.log("AI EMPTY: ", emptyCells);
+    if (emptyCells.length === 0) return;
     const aiMove = getRandomIntInclusive(0, emptyCells.length - 1);
+    console.log("aiMove", aiMove, emptyCells[aiMove]);
     const [row, col] = emptyCells[aiMove];
     logicPlayer(row, col);
   };
@@ -126,21 +124,22 @@ const BoardComponent: React.FC<BoardProps> = ({
     // Human player
     console.log("Human player: O => move");
     if (playerSign(currentPlayer) === "X") return;
-    //
     logicPlayer(row, col);
-    // AIplayer();
   };
 
   useEffect(() => {
-    // console.log("empty", emptyCells);
-    if (playerSign(currentPlayer) === "X") {
-      AIplayer();
-    }
+    const timeout = 500;
+    const idTimer = setTimeout(() => {
+      if (playerSign(currentPlayer) === "X") {
+        AIplayer();
+      }
+    }, timeout);
+    return () => clearTimeout(idTimer);
   }, [currentPlayer === 0]);
 
   useEffect(() => {
     const { winningPlayer, winningCombination } = checkWin(board);
-    // setEmptyCells(filterEmptyCells(board));
+
     if (!blockingWinnerVerification && winningPlayer) {
       addScores(winningPlayer);
       setMessageWinner(`Winner: ${winningPlayer}`);
