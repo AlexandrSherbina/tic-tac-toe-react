@@ -120,11 +120,12 @@ const BoardComponent: React.FC<BoardProps> = ({
     // Human player
     const signCurrPlayer = playerSign(currentPlayer);
     console.log(`Human player: ${signCurrPlayer} => move`);
-    if (signCurrPlayer === "X") return;
+    if (computerPlayer && signCurrPlayer === "X") return;
     logicPlayer(row, col);
   };
 
   useEffect(() => {
+    if (!computerPlayer) return;
     const timeout = 500;
     const signCurrPlayer = playerSign(currentPlayer);
     const idTimer = setTimeout(() => {
@@ -137,7 +138,6 @@ const BoardComponent: React.FC<BoardProps> = ({
 
   useEffect(() => {
     const { winningPlayer, winningCombination } = checkWin(board);
-    console.log("computerPlayer", computerPlayer);
     if (!blockingWinnerVerification && winningPlayer) {
       addScores(winningPlayer);
       setMessageWinner(`Winner: ${winningPlayer}`);
@@ -154,18 +154,19 @@ const BoardComponent: React.FC<BoardProps> = ({
 
   useEffect(() => {
     if (restart) {
+      setPopupOpen(false);
       setCurrentPlayer(switchPlayer(currentPlayer));
       removeWinnerClass();
       setBlockingWinnerVerification(false);
       setBoard(customBoard);
       setRestart(false);
       setStrokeCounter(0);
-      setPopupOpen(false);
     }
   }, [restart]);
 
   useEffect(() => {
     if (reset) {
+      setPopupOpen(false);
       setCurrentPlayer(switchPlayer(currentPlayer));
       setBlockingWinnerVerification(false);
       setScores({ X: 0, O: 0 });
