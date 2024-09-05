@@ -9,6 +9,8 @@ interface PanelGameProps {
   restart: boolean;
   setRestart: (value: boolean) => void;
   setReset: (value: boolean) => void;
+  computerPlayer: boolean;
+  setComputerPlayer: (val: boolean) => void;
 }
 
 const PanelGame: React.FC<PanelGameProps> = ({
@@ -16,13 +18,20 @@ const PanelGame: React.FC<PanelGameProps> = ({
   currentPlayer,
   setRestart,
   setReset,
+  computerPlayer,
+  setComputerPlayer,
 }) => {
   return (
     <>
       <div className="container-panel-game">
         <h1>Tic-Toc-Toe GAME</h1>
         <ScoresPanel scores={scores}></ScoresPanel>
-        <ButtonPanel setRestart={setRestart} setReset={setReset}></ButtonPanel>
+        <ButtonPanel
+          setRestart={setRestart}
+          setReset={setReset}
+          computerPlayer={computerPlayer}
+          setComputerPlayer={setComputerPlayer}
+        ></ButtonPanel>
         <div className="container-step-players">
           Step player: <span>{playerSign(currentPlayer)}</span>
         </div>

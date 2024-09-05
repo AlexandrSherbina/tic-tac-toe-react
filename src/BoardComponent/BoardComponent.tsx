@@ -18,6 +18,8 @@ interface BoardProps {
   setReset: (value: boolean) => void;
   currentPlayer: number;
   setCurrentPlayer: (value: number) => void;
+  computerPlayer: boolean;
+  setComputerPlayer: (val: boolean) => void;
 }
 
 interface StepsType {
@@ -34,6 +36,8 @@ const BoardComponent: React.FC<BoardProps> = ({
   setCurrentPlayer,
   reset,
   setReset,
+  computerPlayer,
+  setComputerPlayer,
 }) => {
   const customBoard = createBoard(SIZE_GRID, "");
   const [board, setBoard] = useState<string[][]>(customBoard);
@@ -133,7 +137,7 @@ const BoardComponent: React.FC<BoardProps> = ({
 
   useEffect(() => {
     const { winningPlayer, winningCombination } = checkWin(board);
-
+    console.log("computerPlayer", computerPlayer);
     if (!blockingWinnerVerification && winningPlayer) {
       addScores(winningPlayer);
       setMessageWinner(`Winner: ${winningPlayer}`);
