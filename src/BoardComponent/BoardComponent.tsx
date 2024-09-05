@@ -9,6 +9,7 @@ import { getRandomIntInclusive } from "../utils/getRandomIntInclusive";
 
 const SIZE_GRID = 3;
 const CLASS_WINNER = "winner";
+const AI_PLAYER = "X";
 
 interface BoardProps {
   setScores: (value: any) => void;
@@ -120,7 +121,7 @@ const BoardComponent: React.FC<BoardProps> = ({
     // Human player
     const signCurrPlayer = playerSign(currentPlayer);
     console.log(`Human player: ${signCurrPlayer} => move`);
-    if (computerPlayer && signCurrPlayer === "X") return;
+    if (computerPlayer && signCurrPlayer === AI_PLAYER) return;
     logicPlayer(row, col);
   };
 
@@ -129,12 +130,12 @@ const BoardComponent: React.FC<BoardProps> = ({
     const timeout = 500;
     const signCurrPlayer = playerSign(currentPlayer);
     const idTimer = setTimeout(() => {
-      if (!blockingWinnerVerification && signCurrPlayer === "X") {
+      if (!blockingWinnerVerification && signCurrPlayer === AI_PLAYER) {
         AIplayer();
       }
     }, timeout);
     return () => clearTimeout(idTimer);
-  }, [currentPlayer === 0, blockingWinnerVerification]);
+  }, [computerPlayer, currentPlayer, blockingWinnerVerification]);
 
   useEffect(() => {
     const { winningPlayer, winningCombination } = checkWin(board);

@@ -10,7 +10,8 @@ type ScoresTypes = {
 };
 
 function App() {
-  const [currentPlayer, setCurrentPlayer] = useState<number>(0);
+  const [firstPlayer, setFirstPlayer] = useState<number>(0);
+  const [currentPlayer, setCurrentPlayer] = useState<number>(firstPlayer);
   const [scores, setScores] = useState<ScoresTypes>({ X: 0, O: 0 });
   const [restart, setRestart] = useState(false);
   const [reset, setReset] = useState(false);
