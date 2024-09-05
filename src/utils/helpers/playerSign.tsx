@@ -1,2 +1,2 @@
-const playerSign = (player: number) => (player === 0 ? "X" : "O");
+const playerSign = (player: number) => (player === 0 ? "O" : "X");
 export default playerSign;

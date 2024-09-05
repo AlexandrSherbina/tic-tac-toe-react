@@ -23,6 +23,12 @@ interface StepsType {
   [key: string]: any[];
 }
 
+function getRandomIntInclusive(min: number, max: number) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min); // Максимум и минимум включаются
+}
+
 const BoardComponent: React.FC<BoardProps> = ({
   setScores,
   restart,
@@ -40,6 +46,10 @@ const BoardComponent: React.FC<BoardProps> = ({
   const [blockingWinnerVerification, setBlockingWinnerVerification] =
     useState<boolean>(false);
   const [playerMoves, setPlayerMoves] = useState<StepsType>({ X: [], O: [] });
+
+  const [emptyCells, setEmptyCells] = useState<number[][]>(
+    filterEmptyCells(board)
+  );
 
   const addPlayerMove = (key: string, value: number | string) => {
     setPlayerMoves((prevState) => ({
@@ -72,22 +82,65 @@ const BoardComponent: React.FC<BoardProps> = ({
     }));
   };
 
-  const handleClick = (row: number, col: number) => {
+  function filterEmptyCells(board: string[][]) {
+    let emptyCells = [];
+    for (let i = 0; i < board.length; i++) {
+      const row = board[i];
+      for (let j = 0; j < row.length; j++) {
+        const col = row[j];
+        if (col === "") {
+          emptyCells.push([i, j]);
+        }
+      }
+    }
+    return emptyCells;
+  }
+
+  function logicPlayer(row: number, col: number) {
     if (board[row][col] !== "") return;
     setBoard((prevBoard) => {
       const newBoard = [...prevBoard];
       newBoard[row][col] = playerSign(currentPlayer);
       return newBoard;
     });
-
     setCurrentPlayer(currentPlayer === 0 ? 1 : 0);
     setStrokeCounter((prevCount) => ++prevCount);
     addPlayerMove(playerSign(currentPlayer), `cell-${row}-${col}`);
+    // console.log("board", board);
+    const empty = filterEmptyCells(board);
+    // console.log("emptyLogic: ", empty);
+    setEmptyCells(empty);
+  }
+
+  const AIplayer = () => {
+    // AI player
+    console.log("AI player: X => move");
+    // const empty = filterEmptyCells(board);
+    console.log("AI empty", emptyCells);
+    const aiMove = getRandomIntInclusive(0, emptyCells.length - 1);
+    const [row, col] = emptyCells[aiMove];
+    logicPlayer(row, col);
+  };
+
+  const handleClick = (row: number, col: number) => {
+    // Human player
+    console.log("Human player: O => move");
+    if (playerSign(currentPlayer) === "X") return;
+    //
+    logicPlayer(row, col);
+    // AIplayer();
   };
 
   useEffect(() => {
-    const { winningPlayer, winningCombination } = checkWin(board);
+    // console.log("empty", emptyCells);
+    if (playerSign(currentPlayer) === "X") {
+      AIplayer();
+    }
+  }, [currentPlayer === 0]);
 
+  useEffect(() => {
+    const { winningPlayer, winningCombination } = checkWin(board);
+    // setEmptyCells(filterEmptyCells(board));
     if (!blockingWinnerVerification && winningPlayer) {
       addScores(winningPlayer);
       setMessageWinner(`Winner: ${winningPlayer}`);
@@ -104,6 +157,7 @@ const BoardComponent: React.FC<BoardProps> = ({
 
   useEffect(() => {
     if (restart) {
+      setCurrentPlayer(0);
       removeWinnerClass();
       setBlockingWinnerVerification(false);
       setBoard(customBoard);
@@ -115,6 +169,7 @@ const BoardComponent: React.FC<BoardProps> = ({
 
   useEffect(() => {
     if (reset) {
+      setCurrentPlayer(0);
       setBlockingWinnerVerification(false);
       setScores({ X: 0, O: 0 });
       removeWinnerClass();
