@@ -24,6 +24,8 @@ interface StepsType {
   [key: string]: any[];
 }
 
+const switchPlayer = (currPlayer: number) => (currPlayer === 0 ? 1 : 0);
+
 const BoardComponent: React.FC<BoardProps> = ({
   setScores,
   restart,
@@ -41,10 +43,6 @@ const BoardComponent: React.FC<BoardProps> = ({
   const [blockingWinnerVerification, setBlockingWinnerVerification] =
     useState<boolean>(false);
   const [playerMoves, setPlayerMoves] = useState<StepsType>({ X: [], O: [] });
-
-  const [emptyCells, setEmptyCells] = useState<number[][]>(
-    filterEmptyCells(board)
-  );
 
   const addPlayerMove = (key: string, value: number | string) => {
     setPlayerMoves((prevState) => ({
@@ -98,44 +96,40 @@ const BoardComponent: React.FC<BoardProps> = ({
       newBoard[row][col] = playerSign(currentPlayer);
       return newBoard;
     });
-    setCurrentPlayer(currentPlayer === 0 ? 1 : 0);
+    setCurrentPlayer(switchPlayer(currentPlayer));
     setStrokeCounter((prevCount) => ++prevCount);
     addPlayerMove(playerSign(currentPlayer), `cell-${row}-${col}`);
-    console.log("board LOGIC", board);
-    const empty = filterEmptyCells(board);
-    // setEmptyCells(empty);
   }
 
   const AIplayer = () => {
     // AI player
-    console.log("AI player: X => move");
-    // console.log("AI empty", emptyCells);
-    console.log("board", board);
+    const signCurrPlayer = playerSign(currentPlayer);
+    console.log(`AI player: ${signCurrPlayer} => move`);
     const emptyCells = filterEmptyCells(board);
-    console.log("AI EMPTY: ", emptyCells);
     if (emptyCells.length === 0) return;
     const aiMove = getRandomIntInclusive(0, emptyCells.length - 1);
-    console.log("aiMove", aiMove, emptyCells[aiMove]);
     const [row, col] = emptyCells[aiMove];
     logicPlayer(row, col);
   };
 
   const handleClick = (row: number, col: number) => {
     // Human player
-    console.log("Human player: O => move");
-    if (playerSign(currentPlayer) === "X") return;
+    const signCurrPlayer = playerSign(currentPlayer);
+    console.log(`Human player: ${signCurrPlayer} => move`);
+    if (signCurrPlayer === "X") return;
     logicPlayer(row, col);
   };
 
   useEffect(() => {
     const timeout = 500;
+    const signCurrPlayer = playerSign(currentPlayer);
     const idTimer = setTimeout(() => {
-      if (playerSign(currentPlayer) === "X") {
+      if (!blockingWinnerVerification && signCurrPlayer === "X") {
         AIplayer();
       }
     }, timeout);
     return () => clearTimeout(idTimer);
-  }, [currentPlayer === 0]);
+  }, [currentPlayer === 0, blockingWinnerVerification]);
 
   useEffect(() => {
     const { winningPlayer, winningCombination } = checkWin(board);
@@ -156,7 +150,7 @@ const BoardComponent: React.FC<BoardProps> = ({
 
   useEffect(() => {
     if (restart) {
-      setCurrentPlayer(0);
+      setCurrentPlayer(switchPlayer(currentPlayer));
       removeWinnerClass();
       setBlockingWinnerVerification(false);
       setBoard(customBoard);
@@ -168,7 +162,7 @@ const BoardComponent: React.FC<BoardProps> = ({
 
   useEffect(() => {
     if (reset) {
-      setCurrentPlayer(0);
+      setCurrentPlayer(switchPlayer(currentPlayer));
       setBlockingWinnerVerification(false);
       setScores({ X: 0, O: 0 });
       removeWinnerClass();
