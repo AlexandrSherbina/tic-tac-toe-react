@@ -14,6 +14,16 @@ interface PanelGameProps {
   setComputerPlayer: (val: boolean) => void;
 }
 
+interface GameMode {
+  value: string;
+  label: string;
+}
+const gameModes: GameMode[] = [
+  { value: "human-human", label: "Human vs. Human" },
+  { value: "human-ai", label: "Human vs. AI" },
+  { value: "ai-ai", label: "AI vs AI" },
+];
+
 const PanelGame: React.FC<PanelGameProps> = ({
   scores,
   currentPlayer,
@@ -33,10 +43,7 @@ const PanelGame: React.FC<PanelGameProps> = ({
           computerPlayer={computerPlayer}
           setComputerPlayer={setComputerPlayer}
         ></ButtonPanel>
-        <GameModeSelector
-          computerPlayer={computerPlayer}
-          setComputerPlayer={setComputerPlayer}
-        />
+        <GameModeSelector gameModes={gameModes} initialMode="human-human" />
         <div className="container-step-players">
           Step player: <span>{playerSign(currentPlayer)}</span>
         </div>
