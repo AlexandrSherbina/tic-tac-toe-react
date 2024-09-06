@@ -1,11 +1,7 @@
 import React, { useEffect } from "react";
 import "./GameModeSelector.scss";
 import useGameMode from "./useGameMode";
-
-interface GameMode {
-  value: string;
-  label: string;
-}
+import { GameMode } from "game-mode";
 
 interface GameModeSelectorProps {
   gameModes: GameMode[];
@@ -39,6 +35,7 @@ const GameModeSelector: React.FC<GameModeSelectorProps> = ({
             type="radio"
             id={mode.value}
             name="gameMode"
+            disabled={mode.disabled}
             value={mode.value}
             checked={selectedMode === mode.value}
             onChange={(e) => handleChange(e.target.value as GameMode["value"])}

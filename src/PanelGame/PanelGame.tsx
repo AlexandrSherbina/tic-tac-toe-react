@@ -4,6 +4,7 @@ import ButtonPanel from "./ButtonPanel/ButtonPanel";
 import ScoresPanel from "./ScoresPanel/ScoresPanel";
 import playerSign from "../utils/helpers/playerSign";
 import GameModeSelector from "./GameModeSelector/GameModeSelector";
+import { GameMode } from "game-mode";
 
 const HUMAN_VS_AI = "human-ai";
 const HUMAN_VS_HUMAN = "human-human";
@@ -17,14 +18,10 @@ interface PanelGameProps {
   setComputerPlayer: (val: boolean) => void;
 }
 
-interface GameMode {
-  value: string;
-  label: string;
-}
 const gameModes: GameMode[] = [
-  { value: "human-human", label: "Human vs. Human" },
-  { value: "human-ai", label: "Human vs. AI" },
-  { value: "ai-ai", label: "AI vs AI" },
+  { value: "human-human", label: "Human vs. Human", disabled: false },
+  { value: "human-ai", label: "Human vs. AI", disabled: false },
+  { value: "ai-ai", label: "AI vs AI", disabled: true },
 ];
 
 const PanelGame: React.FC<PanelGameProps> = ({
