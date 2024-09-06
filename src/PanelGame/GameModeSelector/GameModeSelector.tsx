@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./GameModeSelector.scss";
+import useGameMode from "./useGameMode";
 
 const HUMAN_VS_AI = "human-ai";
 const HUMAN_VS_HUMAN = "human-human";
 
-type values = "human-human" | "human-ai";
+type valueTypes = typeof HUMAN_VS_HUMAN | typeof HUMAN_VS_AI;
 interface GameMode {
-  value: values;
+  value: valueTypes;
   label: string;
 }
 
@@ -18,32 +19,23 @@ const gameModes: GameMode[] = [
 interface GameModeSelectorTypes {
   computerPlayer?: boolean;
   setComputerPlayer: (val: boolean) => void;
-  gameModes?: [];
 }
 
 const GameModeSelector: React.FC<GameModeSelectorTypes> = ({
-  computerPlayer,
   setComputerPlayer,
+  computerPlayer,
 }) => {
-  const [selectedMode, setSelectedMode] =
-    useState<GameMode["value"]>(HUMAN_VS_HUMAN);
-
-  const handleModeChange = (value: GameMode["value"]) => {
-    setSelectedMode(value);
-    if (value === HUMAN_VS_AI) {
-      setComputerPlayer(true);
-    }
-    if (value === HUMAN_VS_HUMAN) {
-      setComputerPlayer(false);
-    }
+  const { selectedMode, handleModeChange } = useGameMode();
+  const handleChange = (value: GameMode["value"]) => {
+    handleModeChange(value);
+    if (value === HUMAN_VS_AI) setComputerPlayer(true);
+    if (value === HUMAN_VS_HUMAN) setComputerPlayer(false);
   };
 
   useEffect(() => {
-    if (computerPlayer) {
-      setSelectedMode(HUMAN_VS_AI);
-    } else {
-      setSelectedMode(HUMAN_VS_HUMAN);
-    }
+    computerPlayer
+      ? handleModeChange(HUMAN_VS_AI)
+      : handleModeChange(HUMAN_VS_HUMAN);
   }, [computerPlayer]);
 
   return (
@@ -56,9 +48,7 @@ const GameModeSelector: React.FC<GameModeSelectorTypes> = ({
             name="gameMode"
             value={mode.value}
             checked={selectedMode === mode.value}
-            onChange={(e) =>
-              handleModeChange(e.target.value as GameMode["value"])
-            }
+            onChange={(e) => handleChange(e.target.value as GameMode["value"])}
           />
           <label htmlFor={mode.value}>{mode.label}</label>
         </div>
