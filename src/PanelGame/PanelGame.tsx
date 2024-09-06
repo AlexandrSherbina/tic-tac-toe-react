@@ -33,7 +33,10 @@ const PanelGame: React.FC<PanelGameProps> = ({
           computerPlayer={computerPlayer}
           setComputerPlayer={setComputerPlayer}
         ></ButtonPanel>
-        <GameModeSelector />
+        <GameModeSelector
+          computerPlayer={computerPlayer}
+          setComputerPlayer={setComputerPlayer}
+        />
         <div className="container-step-players">
           Step player: <span>{playerSign(currentPlayer)}</span>
         </div>

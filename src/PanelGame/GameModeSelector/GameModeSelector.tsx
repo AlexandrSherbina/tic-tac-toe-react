@@ -11,9 +11,26 @@ const gameModes: GameMode[] = [
   { value: "human-ai", label: "Human vs. AI" },
 ];
 
-const GameModeSelector: React.FC = () => {
+interface GameModeSelectorTypes {
+  computerPlayer?: boolean;
+  setComputerPlayer: (val: boolean) => void;
+}
+
+const GameModeSelector: React.FC<GameModeSelectorTypes> = ({
+  setComputerPlayer,
+}) => {
   const [selectedMode, setSelectedMode] =
     useState<GameMode["value"]>("human-human");
+
+  const handleModeChange = (value: GameMode["value"]) => {
+    setSelectedMode(value);
+    if (value === "human-ai") {
+      setComputerPlayer(true);
+    }
+    if (value === "human-human") {
+      setComputerPlayer(false);
+    }
+  };
 
   return (
     <div className="game-mode-selector">
@@ -26,7 +43,7 @@ const GameModeSelector: React.FC = () => {
             value={mode.value}
             checked={selectedMode === mode.value}
             onChange={(e) =>
-              setSelectedMode(e.target.value as GameMode["value"])
+              handleModeChange(e.target.value as GameMode["value"])
             }
           />
           <label htmlFor={mode.value}>{mode.label}</label>
