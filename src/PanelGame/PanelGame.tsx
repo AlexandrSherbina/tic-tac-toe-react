@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./PanelGame.scss";
 import ButtonPanel from "./ButtonPanel/ButtonPanel";
 import ScoresPanel from "./ScoresPanel/ScoresPanel";
 import playerSign from "../utils/helpers/playerSign";
 import GameModeSelector from "./GameModeSelector/GameModeSelector";
+
+const HUMAN_VS_AI = "human-ai";
+const HUMAN_VS_HUMAN = "human-human";
 interface PanelGameProps {
   scores: { X: number; O: number };
   currentPlayer: number;
@@ -32,6 +35,16 @@ const PanelGame: React.FC<PanelGameProps> = ({
   computerPlayer,
   setComputerPlayer,
 }) => {
+  const [mode, setMode] = useState<GameMode["value"]>("human-human");
+
+  const handleModeChange = (value: string) => {
+    if (value === HUMAN_VS_AI) setComputerPlayer(true);
+    if (value === HUMAN_VS_HUMAN) setComputerPlayer(false);
+  };
+
+  useEffect(() => {
+    computerPlayer ? setMode(HUMAN_VS_AI) : setMode(HUMAN_VS_HUMAN);
+  }, [computerPlayer]);
   return (
     <>
       <div className="container-panel-game">
@@ -43,7 +56,12 @@ const PanelGame: React.FC<PanelGameProps> = ({
           computerPlayer={computerPlayer}
           setComputerPlayer={setComputerPlayer}
         ></ButtonPanel>
-        <GameModeSelector gameModes={gameModes} initialMode="human-human" />
+        <GameModeSelector
+          gameModes={gameModes}
+          initialMode={"human-human"}
+          mode={mode}
+          onModeChange={handleModeChange}
+        />
         <div className="container-step-players">
           Step player: <span>{playerSign(currentPlayer)}</span>
         </div>
