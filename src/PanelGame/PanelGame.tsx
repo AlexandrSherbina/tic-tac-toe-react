@@ -3,6 +3,7 @@ import "./PanelGame.scss";
 import ButtonPanel from "./ButtonPanel/ButtonPanel";
 import ScoresPanel from "./ScoresPanel/ScoresPanel";
 import playerSign from "../utils/helpers/playerSign";
+import GameModeSelector from "./GameModeSelector/GameModeSelector";
 interface PanelGameProps {
   scores: { X: number; O: number };
   currentPlayer: number;
@@ -32,6 +33,7 @@ const PanelGame: React.FC<PanelGameProps> = ({
           computerPlayer={computerPlayer}
           setComputerPlayer={setComputerPlayer}
         ></ButtonPanel>
+        <GameModeSelector />
         <div className="container-step-players">
           Step player: <span>{playerSign(currentPlayer)}</span>
         </div>

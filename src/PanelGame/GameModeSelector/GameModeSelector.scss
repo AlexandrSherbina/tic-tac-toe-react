@@ -1,0 +1,17 @@
+@import '../../styles/global.scss';
+
+.game-mode-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .game-mode-option {
+    display: flex;
+    align-items: center;
+  }
+
+ .game-mode-option > input[type="radio"]:checked ~ label  {
+  text-shadow: $text-shadow-primary;
+    font-weight: 700;
+  }
