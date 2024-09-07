@@ -24,10 +24,6 @@ interface BoardProps {
   setComputerPlayer: (val: boolean) => void;
 }
 
-interface StepsType {
-  [key: string]: any[];
-}
-
 const switchPlayer = (currPlayer: string) => (currPlayer === "O" ? "X" : "O");
 
 const BoardComponent: React.FC<BoardProps> = ({
@@ -128,6 +124,7 @@ const BoardComponent: React.FC<BoardProps> = ({
   const handleClick = (row: number, col: number) => {
     // Human player
     console.log(`Human player: ${currentPlayer} => move`);
+
     if (computerPlayer && currentPlayer === AI_PLAYER) return;
     logicPlayer(row, col);
   };

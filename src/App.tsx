@@ -5,11 +5,6 @@ import { useState } from "react";
 import BackgroundApp from "./BackgroundApp/BackgroundApp";
 import { PlayersType } from "game-players";
 
-type ScoresTypes = {
-  X: number;
-  O: number;
-};
-
 function App() {
   const [players, setPlayers] = useState<PlayersType>({
     O: {
@@ -41,6 +36,7 @@ function App() {
         <BackgroundApp restart={restart}></BackgroundApp>
         <PanelGame
           players={players}
+          setPlayers={setPlayers}
           currentPlayer={currentPlayer}
           restart={restart}
           setRestart={setRestart}

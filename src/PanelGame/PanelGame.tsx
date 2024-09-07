@@ -9,8 +9,10 @@ import { PlayersType } from "game-players";
 
 const HUMAN_VS_AI = "human-ai";
 const HUMAN_VS_HUMAN = "human-human";
+const AI_VS_AI = "ai-ai";
 interface PanelGameProps {
   players: PlayersType;
+  setPlayers: (value: {}) => void;
   currentPlayer: string;
   restart: boolean;
   setRestart: (value: boolean) => void;
@@ -22,11 +24,12 @@ interface PanelGameProps {
 const gameModes: GameMode[] = [
   { value: "human-human", label: "Human vs. Human", disabled: false },
   { value: "human-ai", label: "Human vs. AI", disabled: false },
-  { value: "ai-ai", label: "AI vs AI", disabled: true },
+  { value: "ai-ai", label: "AI vs AI", disabled: false },
 ];
 
 const PanelGame: React.FC<PanelGameProps> = ({
   players,
+  setPlayers,
   currentPlayer,
   setRestart,
   setReset,
@@ -35,9 +38,37 @@ const PanelGame: React.FC<PanelGameProps> = ({
 }) => {
   const [mode, setMode] = useState<GameMode["value"]>("human-human");
 
+  const updatePlayersStatus = (
+    playerIdsToUpdate: string[],
+    isHuman: boolean
+  ) => {
+    setPlayers((prevPlayers: any[]) => {
+      return Object.keys(prevPlayers).reduce((newPlayers, playerId) => {
+        const shouldUpdate = playerIdsToUpdate.includes(playerId);
+        return {
+          ...newPlayers,
+          [playerId]: {
+            ...players[playerId],
+            human: shouldUpdate ? isHuman : players[playerId].human,
+            ai: shouldUpdate ? !isHuman : players[playerId].ai,
+          },
+        };
+      }, {} as PlayersType);
+    });
+  };
   const handleModeChange = (value: string) => {
-    if (value === HUMAN_VS_AI) setComputerPlayer(true);
-    if (value === HUMAN_VS_HUMAN) setComputerPlayer(false);
+    if (value === HUMAN_VS_HUMAN) {
+      updatePlayersStatus(["X", "O"], true);
+      setComputerPlayer(false);
+    }
+    if (value === HUMAN_VS_AI) {
+      updatePlayersStatus(["X"], false);
+      updatePlayersStatus(["O"], true);
+      setComputerPlayer(true);
+    }
+    if (value === AI_VS_AI) {
+      updatePlayersStatus(["X", "O"], false);
+    }
   };
 
   useEffect(() => {
