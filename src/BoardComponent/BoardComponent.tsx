@@ -5,7 +5,7 @@ import { checkWin } from "../utils/helpers/checkWin";
 import Popup from "../Popup/Popup";
 import "./BoardComponent.scss";
 import { getRandomIntInclusive } from "../utils/getRandomIntInclusive";
-import { Player, PlayersType } from "game-players";
+import { PlayersType } from "game-players";
 
 const SIZE_GRID = 3;
 const CLASS_WINNER = "winner";
@@ -49,12 +49,15 @@ const BoardComponent: React.FC<BoardProps> = ({
   const [popupOpen, setPopupOpen] = useState<boolean>(false);
   const [blockingWinnerVerification, setBlockingWinnerVerification] =
     useState<boolean>(false);
-  const [playerMoves, setPlayerMoves] = useState<StepsType>({ X: [], O: [] });
 
-  const addPlayerMove = (key: string, value: number | string) => {
-    setPlayerMoves((prevState) => ({
-      ...prevState,
-      [key]: [...(prevState[key] || []), value],
+  const addPlayerMove = (playerId: string, move: number[]) => {
+    // new player move
+    setPlayers((prevPlayers: { [x: string]: any }) => ({
+      ...prevPlayers,
+      [playerId]: {
+        ...prevPlayers[playerId],
+        playerMoves: [...(prevPlayers[playerId].playerMoves || []), move],
+      },
     }));
   };
 
@@ -109,7 +112,7 @@ const BoardComponent: React.FC<BoardProps> = ({
     });
     setCurrentPlayer(switchPlayer(currentPlayer));
     setStrokeCounter((prevCount) => ++prevCount);
-    addPlayerMove(currentPlayer, `cell-${row}-${col}`);
+    addPlayerMove(currentPlayer, [row, col]);
   }
 
   const AIplayer = () => {
@@ -155,6 +158,9 @@ const BoardComponent: React.FC<BoardProps> = ({
       setMessageWinner("Standoff!");
       setPopupOpen(true);
     }
+    console.log("players: ", players);
+    console.log("playersX: ", players["X"]);
+    console.log("playersO: ", players["O"]);
   }, [board]);
 
   useEffect(() => {
