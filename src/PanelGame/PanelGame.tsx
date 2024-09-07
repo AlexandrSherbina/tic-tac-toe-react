@@ -10,7 +10,7 @@ const HUMAN_VS_AI = "human-ai";
 const HUMAN_VS_HUMAN = "human-human";
 interface PanelGameProps {
   scores: { X: number; O: number };
-  currentPlayer: number;
+  currentPlayer: string;
   restart: boolean;
   setRestart: (value: boolean) => void;
   setReset: (value: boolean) => void;
@@ -60,7 +60,7 @@ const PanelGame: React.FC<PanelGameProps> = ({
           onModeChange={handleModeChange}
         />
         <div className="container-step-players">
-          Step player: <span>{playerSign(currentPlayer)}</span>
+          Step player: <span>{currentPlayer}</span>
         </div>
       </div>
     </>

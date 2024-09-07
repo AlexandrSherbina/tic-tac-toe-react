@@ -6,19 +6,22 @@ import Popup from "../Popup/Popup";
 import "./BoardComponent.scss";
 import playerSign from "../utils/helpers/playerSign";
 import { getRandomIntInclusive } from "../utils/getRandomIntInclusive";
+import { PlayersType } from "game-players";
 
 const SIZE_GRID = 3;
 const CLASS_WINNER = "winner";
 const AI_PLAYER = "X";
 
 interface BoardProps {
+  players: PlayersType;
+  setPlayers: (value: PlayersType) => void;
   setScores: (value: any) => void;
   restart: boolean;
   setRestart: (value: boolean) => void;
   reset: boolean;
   setReset: (value: boolean) => void;
-  currentPlayer: number;
-  setCurrentPlayer: (value: number) => void;
+  currentPlayer: string;
+  setCurrentPlayer: (value: string) => void;
   computerPlayer: boolean;
   setComputerPlayer: (val: boolean) => void;
 }
@@ -27,9 +30,12 @@ interface StepsType {
   [key: string]: any[];
 }
 
-const switchPlayer = (currPlayer: number) => (currPlayer === 0 ? 1 : 0);
+// const switchPlayer = (currPlayer: number) => (currPlayer === 0 ? 1 : 0);
+const switchPlayer = (currPlayer: string) => (currPlayer === "O" ? "X" : "O");
 
 const BoardComponent: React.FC<BoardProps> = ({
+  players,
+  setPlayers,
   setScores,
   restart,
   setRestart,
@@ -98,18 +104,18 @@ const BoardComponent: React.FC<BoardProps> = ({
     if (board[row][col] !== "") return;
     setBoard((prevBoard) => {
       const newBoard = [...prevBoard];
-      newBoard[row][col] = playerSign(currentPlayer);
+      newBoard[row][col] = currentPlayer;
       return newBoard;
     });
     setCurrentPlayer(switchPlayer(currentPlayer));
     setStrokeCounter((prevCount) => ++prevCount);
-    addPlayerMove(playerSign(currentPlayer), `cell-${row}-${col}`);
+    addPlayerMove(currentPlayer, `cell-${row}-${col}`);
   }
 
   const AIplayer = () => {
     // AI player
-    const signCurrPlayer = playerSign(currentPlayer);
-    console.log(`AI player: ${signCurrPlayer} => move`);
+
+    console.log(`AI player: ${currentPlayer} => move`);
     const emptyCells = filterEmptyCells(board);
     if (emptyCells.length === 0) return;
     const aiMove = getRandomIntInclusive(0, emptyCells.length - 1);
@@ -119,18 +125,18 @@ const BoardComponent: React.FC<BoardProps> = ({
 
   const handleClick = (row: number, col: number) => {
     // Human player
-    const signCurrPlayer = playerSign(currentPlayer);
-    console.log(`Human player: ${signCurrPlayer} => move`);
-    if (computerPlayer && signCurrPlayer === AI_PLAYER) return;
+
+    console.log(`Human player: ${currentPlayer} => move`);
+    if (computerPlayer && currentPlayer === AI_PLAYER) return;
     logicPlayer(row, col);
   };
 
   useEffect(() => {
     if (!computerPlayer) return;
     const timeout = 500;
-    const signCurrPlayer = playerSign(currentPlayer);
+
     const idTimer = setTimeout(() => {
-      if (!blockingWinnerVerification && signCurrPlayer === AI_PLAYER) {
+      if (!blockingWinnerVerification && currentPlayer === AI_PLAYER) {
         AIplayer();
       }
     }, timeout);
