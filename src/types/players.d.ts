@@ -1,10 +1,13 @@
 
 declare module 'game-players' {
-    interface Player {
+    export interface Player {
         index: number,
+        playerLetter: string;
         human: boolean;
         ai: boolean;
         scores: number;
+        isWinner?: boolean;
+        isLoser?: boolean;
         playerMoves: Array<number>;
     }
 

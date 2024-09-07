@@ -4,9 +4,8 @@ import { createBoard } from "../utils/helpers/createBoard";
 import { checkWin } from "../utils/helpers/checkWin";
 import Popup from "../Popup/Popup";
 import "./BoardComponent.scss";
-import playerSign from "../utils/helpers/playerSign";
 import { getRandomIntInclusive } from "../utils/getRandomIntInclusive";
-import { PlayersType } from "game-players";
+import { Player, PlayersType } from "game-players";
 
 const SIZE_GRID = 3;
 const CLASS_WINNER = "winner";
@@ -14,7 +13,7 @@ const AI_PLAYER = "X";
 
 interface BoardProps {
   players: PlayersType;
-  setPlayers: (value: PlayersType) => void;
+  setPlayers: (value: {}) => void;
   setScores: (value: any) => void;
   restart: boolean;
   setRestart: (value: boolean) => void;
@@ -30,7 +29,6 @@ interface StepsType {
   [key: string]: any[];
 }
 
-// const switchPlayer = (currPlayer: number) => (currPlayer === 0 ? 1 : 0);
 const switchPlayer = (currPlayer: string) => (currPlayer === "O" ? "X" : "O");
 
 const BoardComponent: React.FC<BoardProps> = ({
@@ -85,6 +83,16 @@ const BoardComponent: React.FC<BoardProps> = ({
       [key]: prevState[key] + (key === "O" || key === "X" ? 1 : 0),
     }));
   };
+  // New Scores
+  const updatePlayerScores = (playerId: "X" | "O") => {
+    setPlayers((prevPlayers: { [x: string]: { scores: number } }) => ({
+      ...prevPlayers,
+      [playerId]: {
+        ...prevPlayers[playerId],
+        scores: prevPlayers[playerId].scores + 1,
+      },
+    }));
+  };
 
   function filterEmptyCells(board: string[][]) {
     let emptyCells = [];
@@ -114,7 +122,6 @@ const BoardComponent: React.FC<BoardProps> = ({
 
   const AIplayer = () => {
     // AI player
-
     console.log(`AI player: ${currentPlayer} => move`);
     const emptyCells = filterEmptyCells(board);
     if (emptyCells.length === 0) return;
@@ -125,7 +132,6 @@ const BoardComponent: React.FC<BoardProps> = ({
 
   const handleClick = (row: number, col: number) => {
     // Human player
-
     console.log(`Human player: ${currentPlayer} => move`);
     if (computerPlayer && currentPlayer === AI_PLAYER) return;
     logicPlayer(row, col);
@@ -147,6 +153,9 @@ const BoardComponent: React.FC<BoardProps> = ({
     const { winningPlayer, winningCombination } = checkWin(board);
     if (!blockingWinnerVerification && winningPlayer) {
       addScores(winningPlayer);
+      // new Scores
+      updatePlayerScores(winningPlayer);
+      //
       setMessageWinner(`Winner: ${winningPlayer}`);
       setPopupOpen(true);
       addClassToWinnerCell(winningCombination);
@@ -157,6 +166,9 @@ const BoardComponent: React.FC<BoardProps> = ({
       setMessageWinner("Standoff!");
       setPopupOpen(true);
     }
+    console.log("players: ", players);
+    console.log("playerX: ", players["X"].scores);
+    console.log("playerO: ", players["O"].scores);
   }, [board]);
 
   useEffect(() => {

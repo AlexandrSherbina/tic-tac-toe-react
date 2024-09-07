@@ -11,14 +11,10 @@ type ScoresTypes = {
 };
 
 function App() {
-  const [currentPlayer, setCurrentPlayer] = useState<string>("O");
-  const [scores, setScores] = useState<ScoresTypes>({ X: 0, O: 0 });
-  const [restart, setRestart] = useState(false);
-  const [reset, setReset] = useState(false);
-  const [computerPlayer, setComputerPlayer] = useState<boolean>(false);
   const [players, setPlayers] = useState<PlayersType>({
     O: {
       index: 0,
+      playerLetter: "O",
       human: true,
       ai: false,
       scores: 0,
@@ -26,18 +22,27 @@ function App() {
     },
     X: {
       index: 1,
+      playerLetter: "X",
       human: true,
       ai: false,
       scores: 0,
       playerMoves: [],
     },
   });
+  const [currentPlayer, setCurrentPlayer] = useState<string>(
+    players["X"].playerLetter
+  );
+  const [scores, setScores] = useState<ScoresTypes>({ X: 0, O: 0 });
+  const [restart, setRestart] = useState(false);
+  const [reset, setReset] = useState(false);
+  const [computerPlayer, setComputerPlayer] = useState<boolean>(false);
   return (
     <>
       <div className="container-game">
         <BackgroundApp restart={restart}></BackgroundApp>
         <PanelGame
           scores={scores}
+          players={players}
           currentPlayer={currentPlayer}
           restart={restart}
           setRestart={setRestart}

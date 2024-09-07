@@ -5,10 +5,12 @@ import ScoresPanel from "./ScoresPanel/ScoresPanel";
 import playerSign from "../utils/helpers/playerSign";
 import GameModeSelector from "./GameModeSelector/GameModeSelector";
 import { GameMode } from "game-mode";
+import { PlayersType } from "game-players";
 
 const HUMAN_VS_AI = "human-ai";
 const HUMAN_VS_HUMAN = "human-human";
 interface PanelGameProps {
+  players: PlayersType;
   scores: { X: number; O: number };
   currentPlayer: string;
   restart: boolean;
@@ -25,6 +27,7 @@ const gameModes: GameMode[] = [
 ];
 
 const PanelGame: React.FC<PanelGameProps> = ({
+  players,
   scores,
   currentPlayer,
   setRestart,
