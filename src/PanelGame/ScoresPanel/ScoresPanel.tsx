@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "./ScoresPanel.scss";
 import FastCounter from "./FastCounter/FastCounter";
+import { PlayersType } from "game-players";
 interface ScoresPanelProps {
-  scores: { X: number; O: number };
+  players: PlayersType;
 }
 
-const ScoresPanel: React.FC<ScoresPanelProps> = ({ scores }) => {
+const ScoresPanel: React.FC<ScoresPanelProps> = ({ players }) => {
   return (
     <div className="container-scores-game">
-      {Object.entries(scores).map(([player, score], i) => {
+      {Object.values(players).map(({ playerLetter, scores }, i) => {
         return (
-          <div key={`key-${player}-score-${i}`} className="player-game">
-            Scores Player {player}:
+          <div key={`key-${playerLetter}-score-${i}`} className="player-game">
+            Scores Player {playerLetter}:
             <FastCounter
-              score={score}
+              score={scores}
               rank={100}
               delay={4}
               className="scores-player"

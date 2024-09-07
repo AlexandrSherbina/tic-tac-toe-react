@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./PanelGame.scss";
 import ButtonPanel from "./ButtonPanel/ButtonPanel";
 import ScoresPanel from "./ScoresPanel/ScoresPanel";
-import playerSign from "../utils/helpers/playerSign";
+
 import GameModeSelector from "./GameModeSelector/GameModeSelector";
 import { GameMode } from "game-mode";
 import { PlayersType } from "game-players";
@@ -11,7 +11,6 @@ const HUMAN_VS_AI = "human-ai";
 const HUMAN_VS_HUMAN = "human-human";
 interface PanelGameProps {
   players: PlayersType;
-  scores: { X: number; O: number };
   currentPlayer: string;
   restart: boolean;
   setRestart: (value: boolean) => void;
@@ -28,7 +27,6 @@ const gameModes: GameMode[] = [
 
 const PanelGame: React.FC<PanelGameProps> = ({
   players,
-  scores,
   currentPlayer,
   setRestart,
   setReset,
@@ -49,7 +47,7 @@ const PanelGame: React.FC<PanelGameProps> = ({
     <>
       <div className="container-panel-game">
         <h1>Tic-Toc-Toe GAME</h1>
-        <ScoresPanel scores={scores}></ScoresPanel>
+        <ScoresPanel players={players}></ScoresPanel>
         <ButtonPanel
           setRestart={setRestart}
           setReset={setReset}

@@ -14,7 +14,6 @@ const AI_PLAYER = "X";
 interface BoardProps {
   players: PlayersType;
   setPlayers: (value: {}) => void;
-  setScores: (value: any) => void;
   restart: boolean;
   setRestart: (value: boolean) => void;
   reset: boolean;
@@ -34,7 +33,6 @@ const switchPlayer = (currPlayer: string) => (currPlayer === "O" ? "X" : "O");
 const BoardComponent: React.FC<BoardProps> = ({
   players,
   setPlayers,
-  setScores,
   restart,
   setRestart,
   currentPlayer,
@@ -77,12 +75,6 @@ const BoardComponent: React.FC<BoardProps> = ({
     });
   };
 
-  const addScores = (key: string) => {
-    setScores((prevState: { [key: string]: string & number }) => ({
-      ...prevState,
-      [key]: prevState[key] + (key === "O" || key === "X" ? 1 : 0),
-    }));
-  };
   // New Scores
   const updatePlayerScores = (playerId: "X" | "O") => {
     setPlayers((prevPlayers: { [x: string]: { scores: number } }) => ({
@@ -152,10 +144,7 @@ const BoardComponent: React.FC<BoardProps> = ({
   useEffect(() => {
     const { winningPlayer, winningCombination } = checkWin(board);
     if (!blockingWinnerVerification && winningPlayer) {
-      addScores(winningPlayer);
-      // new Scores
       updatePlayerScores(winningPlayer);
-      //
       setMessageWinner(`Winner: ${winningPlayer}`);
       setPopupOpen(true);
       addClassToWinnerCell(winningCombination);
@@ -166,9 +155,6 @@ const BoardComponent: React.FC<BoardProps> = ({
       setMessageWinner("Standoff!");
       setPopupOpen(true);
     }
-    console.log("players: ", players);
-    console.log("playerX: ", players["X"].scores);
-    console.log("playerO: ", players["O"].scores);
   }, [board]);
 
   useEffect(() => {
@@ -188,7 +174,6 @@ const BoardComponent: React.FC<BoardProps> = ({
       setPopupOpen(false);
       setCurrentPlayer(switchPlayer(currentPlayer));
       setBlockingWinnerVerification(false);
-      setScores({ X: 0, O: 0 });
       removeWinnerClass();
       setStrokeCounter(0);
       setBoard(customBoard);

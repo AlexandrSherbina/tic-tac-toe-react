@@ -32,7 +32,6 @@ function App() {
   const [currentPlayer, setCurrentPlayer] = useState<string>(
     players["X"].playerLetter
   );
-  const [scores, setScores] = useState<ScoresTypes>({ X: 0, O: 0 });
   const [restart, setRestart] = useState(false);
   const [reset, setReset] = useState(false);
   const [computerPlayer, setComputerPlayer] = useState<boolean>(false);
@@ -41,7 +40,6 @@ function App() {
       <div className="container-game">
         <BackgroundApp restart={restart}></BackgroundApp>
         <PanelGame
-          scores={scores}
           players={players}
           currentPlayer={currentPlayer}
           restart={restart}
@@ -53,7 +51,6 @@ function App() {
         <BoardComponent
           players={players}
           setPlayers={setPlayers}
-          setScores={setScores}
           currentPlayer={currentPlayer}
           setCurrentPlayer={setCurrentPlayer}
           restart={restart}
