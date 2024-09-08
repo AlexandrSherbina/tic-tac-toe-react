@@ -63,17 +63,18 @@ const PanelGame: React.FC<PanelGameProps> = ({
     }
     if (value === HUMAN_VS_AI) {
       updatePlayersStatus(["X"], false);
-      updatePlayersStatus(["O"], true);
+      // updatePlayersStatus(["O"], true);
       setComputerPlayer(true);
     }
     if (value === AI_VS_AI) {
       updatePlayersStatus(["X", "O"], false);
     }
   };
-
+  // deprecated => need remove
   useEffect(() => {
     computerPlayer ? setMode(HUMAN_VS_AI) : setMode(HUMAN_VS_HUMAN);
   }, [computerPlayer]);
+  //
   return (
     <>
       <div className="container-panel-game">

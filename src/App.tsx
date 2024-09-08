@@ -53,8 +53,6 @@ function App() {
           setRestart={setRestart}
           setReset={setReset}
           reset={reset}
-          setComputerPlayer={setComputerPlayer}
-          computerPlayer={computerPlayer}
         ></BoardComponent>
       </div>
     </>

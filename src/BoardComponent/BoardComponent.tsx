@@ -9,7 +9,6 @@ import { PlayersType } from "game-players";
 
 const SIZE_GRID = 3;
 const CLASS_WINNER = "winner";
-const AI_PLAYER = "X";
 
 interface BoardProps {
   players: PlayersType;
@@ -20,8 +19,6 @@ interface BoardProps {
   setReset: (value: boolean) => void;
   currentPlayer: string;
   setCurrentPlayer: (value: string) => void;
-  computerPlayer: boolean;
-  setComputerPlayer: (val: boolean) => void;
 }
 
 const switchPlayer = (currPlayer: string) => (currPlayer === "O" ? "X" : "O");
@@ -35,8 +32,6 @@ const BoardComponent: React.FC<BoardProps> = ({
   setCurrentPlayer,
   reset,
   setReset,
-  computerPlayer,
-  setComputerPlayer,
 }) => {
   const customBoard = createBoard(SIZE_GRID, "");
   const [board, setBoard] = useState<string[][]>(customBoard);
@@ -124,22 +119,20 @@ const BoardComponent: React.FC<BoardProps> = ({
   const handleClick = (row: number, col: number) => {
     // Human player
     console.log(`Human player: ${currentPlayer} => move`);
-
-    if (computerPlayer && currentPlayer === AI_PLAYER) return;
+    if (players[currentPlayer].ai) return;
     logicPlayer(row, col);
   };
 
   useEffect(() => {
-    if (!computerPlayer) return;
-    const timeout = 500;
+    if (players[currentPlayer].human) return;
+    if (blockingWinnerVerification) return;
+    const timeout = 800;
 
     const idTimer = setTimeout(() => {
-      if (!blockingWinnerVerification && currentPlayer === AI_PLAYER) {
-        AIplayer();
-      }
+      AIplayer();
     }, timeout);
     return () => clearTimeout(idTimer);
-  }, [computerPlayer, currentPlayer, blockingWinnerVerification]);
+  }, [players, currentPlayer, blockingWinnerVerification]);
 
   useEffect(() => {
     const { winningPlayer, winningCombination } = checkWin(board);
@@ -156,8 +149,8 @@ const BoardComponent: React.FC<BoardProps> = ({
       setPopupOpen(true);
     }
     console.log("players: ", players);
-    console.log("playersX: ", players["X"]);
-    console.log("playersO: ", players["O"]);
+    console.log("playersX: ", players["X"].human);
+    console.log("playersO: ", players["O"].human);
   }, [board]);
 
   useEffect(() => {
