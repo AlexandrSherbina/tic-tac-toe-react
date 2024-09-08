@@ -7,4 +7,5 @@ declare module 'game-mode' {
     label: string;
     disabled?: boolean;
   }
+
 }

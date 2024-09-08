@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./PanelGame.scss";
 import ButtonPanel from "./ButtonPanel/ButtonPanel";
 import ScoresPanel from "./ScoresPanel/ScoresPanel";
@@ -10,6 +10,7 @@ import { PlayersType } from "game-players";
 const HUMAN_VS_AI = "human-ai";
 const HUMAN_VS_HUMAN = "human-human";
 const AI_VS_AI = "ai-ai";
+
 interface PanelGameProps {
   players: PlayersType;
   setPlayers: (value: {}) => void;
@@ -17,8 +18,6 @@ interface PanelGameProps {
   restart: boolean;
   setRestart: (value: boolean) => void;
   setReset: (value: boolean) => void;
-  computerPlayer: boolean;
-  setComputerPlayer: (val: boolean) => void;
 }
 
 const gameModes: GameMode[] = [
@@ -33,59 +32,71 @@ const PanelGame: React.FC<PanelGameProps> = ({
   currentPlayer,
   setRestart,
   setReset,
-  computerPlayer,
-  setComputerPlayer,
 }) => {
   const [mode, setMode] = useState<GameMode["value"]>("human-human");
 
-  const updatePlayersStatus = (
+  const switchPlayersStatus = (
     playerIdsToUpdate: string[],
-    isHuman: boolean
+    isHuman: boolean,
+    additionalCalculation?: (player: PlayersType) => PlayersType
   ) => {
-    setPlayers((prevPlayers: any[]) => {
+    setPlayers((prevPlayers: PlayersType) => {
       return Object.keys(prevPlayers).reduce((newPlayers, playerId) => {
         const shouldUpdate = playerIdsToUpdate.includes(playerId);
+        const updatedPlayer = {
+          ...prevPlayers[playerId],
+          human: shouldUpdate ? isHuman : prevPlayers[playerId].human,
+          ai: shouldUpdate ? !isHuman : prevPlayers[playerId].ai,
+        };
         return {
           ...newPlayers,
-          [playerId]: {
-            ...players[playerId],
-            human: shouldUpdate ? isHuman : players[playerId].human,
-            ai: shouldUpdate ? !isHuman : players[playerId].ai,
-          },
+          [playerId]: updatedPlayer,
         };
       }, {} as PlayersType);
     });
   };
-  const handleModeChange = (value: string) => {
-    if (value === HUMAN_VS_HUMAN) {
-      updatePlayersStatus(["X", "O"], true);
-      setComputerPlayer(false);
-    }
-    if (value === HUMAN_VS_AI) {
-      updatePlayersStatus(["X"], false);
-      // updatePlayersStatus(["O"], true);
-      setComputerPlayer(true);
-    }
-    if (value === AI_VS_AI) {
-      updatePlayersStatus(["X", "O"], false);
+
+  const switchSomePlayerStatus = (playerId: "O" | "X", isHuman: boolean) => {
+    setPlayers((prevPlayers: PlayersType) => ({
+      ...prevPlayers,
+      [playerId]: {
+        ...prevPlayers[playerId],
+        human: isHuman,
+        ai: !isHuman,
+      },
+    }));
+  };
+
+  const playersStatusUpdate = (statusPlayer: string) => {
+    switch (statusPlayer) {
+      case HUMAN_VS_HUMAN:
+        console.log("HUMAN_VS_HUMAN", HUMAN_VS_HUMAN);
+        switchPlayersStatus(["X", "O"], true);
+        break;
+      case HUMAN_VS_AI:
+        console.log("HUMAN_VS_AI", HUMAN_VS_AI);
+        switchSomePlayerStatus("X", false);
+        switchSomePlayerStatus("O", true);
+        break;
+      case AI_VS_AI:
+        console.log("AI_VS_AI", AI_VS_AI);
+        switchPlayersStatus(["X", "O"], false);
+        break;
+      default:
+        console.log(`Status Player : ${statusPlayer} d'ont find `);
+        break;
     }
   };
-  // deprecated => need remove
-  useEffect(() => {
-    computerPlayer ? setMode(HUMAN_VS_AI) : setMode(HUMAN_VS_HUMAN);
-  }, [computerPlayer]);
-  //
+  const handleModeChange = (status: string) => {
+    playersStatusUpdate(status);
+  };
+
   return (
     <>
       <div className="container-panel-game">
         <h1>Tic-Toc-Toe GAME</h1>
         <ScoresPanel players={players}></ScoresPanel>
-        <ButtonPanel
-          setRestart={setRestart}
-          setReset={setReset}
-          computerPlayer={computerPlayer}
-          setComputerPlayer={setComputerPlayer}
-        ></ButtonPanel>
+        <ButtonPanel setRestart={setRestart} setReset={setReset}></ButtonPanel>
         <GameModeSelector
           gameModes={gameModes}
           initialMode={"human-human"}

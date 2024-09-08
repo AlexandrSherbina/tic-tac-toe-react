@@ -29,7 +29,7 @@ function App() {
   );
   const [restart, setRestart] = useState(false);
   const [reset, setReset] = useState(false);
-  const [computerPlayer, setComputerPlayer] = useState<boolean>(false);
+
   return (
     <>
       <div className="container-game">
@@ -41,8 +41,6 @@ function App() {
           restart={restart}
           setRestart={setRestart}
           setReset={setReset}
-          setComputerPlayer={setComputerPlayer}
-          computerPlayer={computerPlayer}
         ></PanelGame>
         <BoardComponent
           players={players}

@@ -14,4 +14,6 @@ declare module 'game-players' {
     export interface PlayersType {
         [key: string]: Player;
     }
+
+    export type PlayerModeStatusType = "human-human" | "human-ai" | "ai-ai";
 }
