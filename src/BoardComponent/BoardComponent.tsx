@@ -6,6 +6,10 @@ import Popup from "../Popup/Popup";
 import "./BoardComponent.scss";
 import { getRandomIntInclusive } from "../utils/getRandomIntInclusive";
 import { PlayersType } from "game-players";
+import {
+  switchPlayer,
+  updateSelectedPlayers,
+} from "../utils/helpers/playerUpdate";
 
 const SIZE_GRID = 3;
 const CLASS_WINNER = "winner";
@@ -20,8 +24,6 @@ interface BoardProps {
   currentPlayer: string;
   setCurrentPlayer: (value: string) => void;
 }
-
-const switchPlayer = (currPlayer: string) => (currPlayer === "O" ? "X" : "O");
 
 const BoardComponent: React.FC<BoardProps> = ({
   players,
@@ -78,6 +80,10 @@ const BoardComponent: React.FC<BoardProps> = ({
         scores: prevPlayers[playerId].scores + 1,
       },
     }));
+  };
+
+  const resetPlayersScores = (playersId: string[], scores: number) => {
+    updateSelectedPlayers(setPlayers, playersId, { scores });
   };
 
   function filterEmptyCells(board: string[][]) {
@@ -167,6 +173,7 @@ const BoardComponent: React.FC<BoardProps> = ({
 
   useEffect(() => {
     if (reset) {
+      resetPlayersScores(["X", "O"], 0);
       setPopupOpen(false);
       setCurrentPlayer(switchPlayer(currentPlayer));
       setBlockingWinnerVerification(false);

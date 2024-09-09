@@ -1,5 +1,8 @@
 import { Player, PlayersType } from "game-players";
 
+export const switchPlayer = (currPlayer: string) =>
+  currPlayer === "O" ? "X" : "O";
+
 export const updatePlayer = (
   setStateFn: (value: any) => void,
   playerId: "O" | "X",
