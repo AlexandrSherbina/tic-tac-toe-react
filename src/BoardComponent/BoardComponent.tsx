@@ -144,7 +144,11 @@ const BoardComponent: React.FC<BoardProps> = ({
     const { winningPlayer, winningCombination } = checkWin(board);
     if (!blockingWinnerVerification && winningPlayer) {
       updatePlayerScores(winningPlayer);
-      setMessageWinner(`Winner: ${winningPlayer}`);
+      setMessageWinner(
+        `${
+          players[winningPlayer].human ? "Human" : "AI"
+        } Winner: ${winningPlayer} !`
+      );
       setPopupOpen(true);
       addClassToWinnerCell(winningCombination);
       setBlockingWinnerVerification(true);
