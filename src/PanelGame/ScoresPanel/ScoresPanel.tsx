@@ -9,10 +9,10 @@ interface ScoresPanelProps {
 const ScoresPanel: React.FC<ScoresPanelProps> = ({ players }) => {
   return (
     <div className="container-scores-game">
-      {Object.values(players).map(({ playerLetter, scores }, i) => {
+      {Object.values(players).map(({ human, playerLetter, scores }, i) => {
         return (
           <div key={`key-${playerLetter}-score-${i}`} className="player-game">
-            Scores Player {playerLetter}:
+            {human ? "Human" : "AI"} Scores {playerLetter}:
             <FastCounter
               score={scores}
               rank={100}

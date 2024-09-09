@@ -83,7 +83,7 @@ const PanelGame: React.FC<PanelGameProps> = ({
   return (
     <>
       <div className="container-panel-game">
-        <h1>Tic-Toc-Toe GAME</h1>
+        <h1>Tic-Tac-Toe GAME</h1>
         <ScoresPanel players={players}></ScoresPanel>
         <ButtonPanel setRestart={setRestart} setReset={setReset}></ButtonPanel>
         <GameModeSelector
@@ -93,7 +93,7 @@ const PanelGame: React.FC<PanelGameProps> = ({
           onModeChange={handleModeChange}
         />
         <div className="container-step-players">
-          Step player: <span>{currentPlayer}</span>
+          Player move: <span>{currentPlayer}</span>
         </div>
       </div>
     </>
