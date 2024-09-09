@@ -6,6 +6,10 @@ import ScoresPanel from "./ScoresPanel/ScoresPanel";
 import GameModeSelector from "./GameModeSelector/GameModeSelector";
 import { GameMode } from "game-mode";
 import { PlayersType } from "game-players";
+import {
+  updatePlayer,
+  updateSelectedPlayers,
+} from "../utils/helpers/playerUpdate";
 
 const HUMAN_VS_AI = "human-ai";
 const HUMAN_VS_HUMAN = "human-human";
@@ -37,34 +41,19 @@ const PanelGame: React.FC<PanelGameProps> = ({
 
   const switchPlayersStatus = (
     playerIdsToUpdate: string[],
-    isHuman: boolean,
-    additionalCalculation?: (player: PlayersType) => PlayersType
+    isHuman: boolean
   ) => {
-    setPlayers((prevPlayers: PlayersType) => {
-      return Object.keys(prevPlayers).reduce((newPlayers, playerId) => {
-        const shouldUpdate = playerIdsToUpdate.includes(playerId);
-        const updatedPlayer = {
-          ...prevPlayers[playerId],
-          human: shouldUpdate ? isHuman : prevPlayers[playerId].human,
-          ai: shouldUpdate ? !isHuman : prevPlayers[playerId].ai,
-        };
-        return {
-          ...newPlayers,
-          [playerId]: updatedPlayer,
-        };
-      }, {} as PlayersType);
+    updateSelectedPlayers(setPlayers, playerIdsToUpdate, {
+      human: isHuman,
+      ai: !isHuman,
     });
   };
 
-  const switchSomePlayerStatus = (playerId: "O" | "X", isHuman: boolean) => {
-    setPlayers((prevPlayers: PlayersType) => ({
-      ...prevPlayers,
-      [playerId]: {
-        ...prevPlayers[playerId],
-        human: isHuman,
-        ai: !isHuman,
-      },
-    }));
+  const switchOnePlayersStatus = (playerId: "O" | "X", isHuman: boolean) => {
+    updatePlayer(setPlayers, playerId, {
+      human: isHuman,
+      ai: !isHuman,
+    });
   };
 
   const playersStatusUpdate = (statusPlayer: string) => {
@@ -75,8 +64,8 @@ const PanelGame: React.FC<PanelGameProps> = ({
         break;
       case HUMAN_VS_AI:
         console.log("HUMAN_VS_AI", HUMAN_VS_AI);
-        switchSomePlayerStatus("X", false);
-        switchSomePlayerStatus("O", true);
+        switchOnePlayersStatus("X", false);
+        switchOnePlayersStatus("O", true);
         break;
       case AI_VS_AI:
         console.log("AI_VS_AI", AI_VS_AI);
