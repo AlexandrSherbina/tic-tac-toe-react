@@ -10,6 +10,7 @@ import {
   updatePlayer,
   updateSelectedPlayers,
 } from "../utils/helpers/playerUpdate";
+import DifficultySlider from "./DifficultySlider/DifficultySlider";
 
 const HUMAN_VS_AI = "human-ai";
 const HUMAN_VS_HUMAN = "human-human";
@@ -80,18 +81,29 @@ const PanelGame: React.FC<PanelGameProps> = ({
     playersStatusUpdate(status);
   };
 
+  const handleDifficultyChange = (difficulty: "low" | "medium" | "hard") => {
+    console.log("New difficulty:", difficulty);
+    // Здесь вы можете обновить состояние вашей игры или выполнить другие необходимые действия
+  };
+
   return (
     <>
       <div className="container-panel-game">
         <h1>Tic-Tac-Toe GAME</h1>
         <ScoresPanel players={players}></ScoresPanel>
         <ButtonPanel setRestart={setRestart} setReset={setReset}></ButtonPanel>
-        <GameModeSelector
-          gameModes={gameModes}
-          initialMode={"human-human"}
-          mode={mode}
-          onModeChange={handleModeChange}
-        />
+        <div className="tools-container">
+          <DifficultySlider
+            onChange={handleDifficultyChange}
+            initialDifficulty="medium"
+          />
+          <GameModeSelector
+            gameModes={gameModes}
+            initialMode={"human-human"}
+            mode={mode}
+            onModeChange={handleModeChange}
+          />
+        </div>
         <div className="container-step-players">
           Player move: <span>{currentPlayer}</span>
         </div>

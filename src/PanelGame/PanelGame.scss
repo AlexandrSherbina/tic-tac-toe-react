@@ -1,7 +1,13 @@
 @import '../styles/global.scss';
 .container-panel-game {
 }
-
+.tools-container {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 0.5rem;
+}
 .container-step-players {
     perspective: 500px;
     &>span {       
