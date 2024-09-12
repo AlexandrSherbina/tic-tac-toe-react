@@ -11,6 +11,7 @@ import {
   updateSelectedPlayers,
 } from "../utils/helpers/playerUpdate";
 import DifficultySlider from "./DifficultySlider/DifficultySlider";
+import { DifficultyType } from "../types/difficulty";
 
 const HUMAN_VS_AI = "human-ai";
 const HUMAN_VS_HUMAN = "human-human";
@@ -20,6 +21,8 @@ interface PanelGameProps {
   players: PlayersType;
   setPlayers: (value: {}) => void;
   currentPlayer: string;
+  gameDifficulty: DifficultyType;
+  setGameDifficulty: (difficulty: DifficultyType) => void;
   restart: boolean;
   setRestart: (value: boolean) => void;
   setReset: (value: boolean) => void;
@@ -35,6 +38,8 @@ const PanelGame: React.FC<PanelGameProps> = ({
   players,
   setPlayers,
   currentPlayer,
+  gameDifficulty,
+  setGameDifficulty,
   setRestart,
   setReset,
 }) => {
@@ -81,9 +86,10 @@ const PanelGame: React.FC<PanelGameProps> = ({
     playersStatusUpdate(status);
   };
 
-  const handleDifficultyChange = (difficulty: "low" | "medium" | "hard") => {
+  const handleDifficultyChange = (difficulty: DifficultyType) => {
     console.log("New difficulty:", difficulty);
     // Здесь вы можете обновить состояние вашей игры или выполнить другие необходимые действия
+    setGameDifficulty(difficulty);
   };
 
   return (
@@ -95,7 +101,7 @@ const PanelGame: React.FC<PanelGameProps> = ({
         <div className="tools-container">
           <DifficultySlider
             onChange={handleDifficultyChange}
-            initialDifficulty="medium"
+            initialDifficulty={gameDifficulty}
           />
           <GameModeSelector
             gameModes={gameModes}

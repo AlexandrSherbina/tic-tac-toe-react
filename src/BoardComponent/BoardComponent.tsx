@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Cell } from "../Cell/Cell";
 import { createBoard } from "../utils/helpers/createBoard";
-import { checkWin } from "../utils/helpers/checkWin";
+import { checkWin, winProbabilityCalculation } from "../utils/helpers/checkWin";
 import Popup from "../Popup/Popup";
 import "./BoardComponent.scss";
 import { getRandomIntInclusive } from "../utils/getRandomIntInclusive";
@@ -10,6 +10,7 @@ import {
   switchPlayer,
   updateSelectedPlayers,
 } from "../utils/helpers/playerUpdate";
+import { DifficultyType } from "../types/difficulty";
 
 const SIZE_GRID = 3;
 const CLASS_WINNER = "winner";
@@ -17,21 +18,23 @@ const CLASS_WINNER = "winner";
 interface BoardProps {
   players: PlayersType;
   setPlayers: (value: {}) => void;
+  currentPlayer: string;
+  setCurrentPlayer: (value: string) => void;
+  gameDifficulty: DifficultyType;
   restart: boolean;
   setRestart: (value: boolean) => void;
   reset: boolean;
   setReset: (value: boolean) => void;
-  currentPlayer: string;
-  setCurrentPlayer: (value: string) => void;
 }
 
 const BoardComponent: React.FC<BoardProps> = ({
   players,
   setPlayers,
-  restart,
-  setRestart,
   currentPlayer,
   setCurrentPlayer,
+  gameDifficulty,
+  restart,
+  setRestart,
   reset,
   setReset,
 }) => {
@@ -115,11 +118,22 @@ const BoardComponent: React.FC<BoardProps> = ({
   const AIplayer = () => {
     // AI player
     console.log(`AI player: ${currentPlayer} => move`);
-    const emptyCells = filterEmptyCells(board);
-    if (emptyCells.length === 0) return;
-    const aiMove = getRandomIntInclusive(0, emptyCells.length - 1);
-    const [row, col] = emptyCells[aiMove];
-    logicPlayer(row, col);
+
+    // probably calculation
+    if (gameDifficulty === "medium" || gameDifficulty === "hard") {
+      const { row, col } = winProbabilityCalculation(
+        board,
+        currentPlayer,
+        switchPlayer(currentPlayer)
+      );
+      logicPlayer(row, col);
+    } else {
+      const emptyCells = filterEmptyCells(board);
+      if (emptyCells.length === 0) return;
+      const aiMove = getRandomIntInclusive(0, emptyCells.length - 1);
+      const [row, col] = emptyCells[aiMove];
+      logicPlayer(row, col);
+    }
   };
 
   const handleClick = (row: number, col: number) => {
@@ -158,9 +172,9 @@ const BoardComponent: React.FC<BoardProps> = ({
       setMessageWinner("Standoff!");
       setPopupOpen(true);
     }
-    console.log("players: ", players);
-    console.log("playersX: ", players["X"].human);
-    console.log("playersO: ", players["O"].human);
+    // console.log("players: ", players);
+    // console.log("playersX: ", players["X"].human);
+    // console.log("playersO: ", players["O"].human);
   }, [board]);
 
   useEffect(() => {

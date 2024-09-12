@@ -5,6 +5,7 @@ import { useState } from "react";
 import BackgroundApp from "./BackgroundApp/BackgroundApp";
 import usePlayers from "./hooks/Players.Hook";
 import { PlayersType } from "game-players";
+import { DifficultyType } from "./types/difficulty";
 
 const initialPlayers: PlayersType = {
   O: {
@@ -32,6 +33,8 @@ function App() {
   );
   const [restart, setRestart] = useState(false);
   const [reset, setReset] = useState(false);
+  const [gameDifficulty, setGameDifficulty] =
+    useState<DifficultyType>("medium");
 
   return (
     <>
@@ -41,6 +44,8 @@ function App() {
           players={players}
           setPlayers={setPlayers}
           currentPlayer={currentPlayer}
+          gameDifficulty={gameDifficulty}
+          setGameDifficulty={setGameDifficulty}
           restart={restart}
           setRestart={setRestart}
           setReset={setReset}
@@ -50,6 +55,7 @@ function App() {
           setPlayers={setPlayers}
           currentPlayer={currentPlayer}
           setCurrentPlayer={setCurrentPlayer}
+          gameDifficulty={gameDifficulty}
           restart={restart}
           setRestart={setRestart}
           setReset={setReset}

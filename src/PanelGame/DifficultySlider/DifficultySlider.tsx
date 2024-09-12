@@ -1,9 +1,10 @@
 import React, { useState, useCallback, useEffect } from "react";
 import "./DifficultySlider.scss";
+import { DifficultyType } from "../../types/difficulty";
 
 interface DifficultySliderProps {
-  onChange: (difficulty: "low" | "medium" | "hard") => void;
-  initialDifficulty?: "low" | "medium" | "hard";
+  onChange: (difficulty: DifficultyType) => void;
+  initialDifficulty?: DifficultyType;
 }
 
 const difficultyToValue = {
@@ -29,7 +30,7 @@ const DifficultySlider: React.FC<DifficultySliderProps> = ({
       const newValue = parseInt(event.target.value, 10);
       setValue(newValue);
 
-      let difficulty: "low" | "medium" | "hard";
+      let difficulty: DifficultyType;
       if (newValue <= 33) {
         difficulty = "low";
       } else if (newValue <= 66) {
