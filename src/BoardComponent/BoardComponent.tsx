@@ -123,8 +123,8 @@ const BoardComponent: React.FC<BoardProps> = ({
     if (gameDifficulty === "medium" || gameDifficulty === "hard") {
       const { row, col } = winProbabilityCalculation(
         board,
-        currentPlayer,
-        switchPlayer(currentPlayer)
+        switchPlayer(currentPlayer),
+        currentPlayer
       );
       logicPlayer(row, col);
     } else {
